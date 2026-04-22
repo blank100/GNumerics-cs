@@ -11,7 +11,7 @@ namespace FixedNumeric.Benchmark {
 #if DEBUG
 			DebugRunner.Run();
 #else
-			BenchmarkRunner.Run<Fixed32Benchmark>();
+			BenchmarkRunner.Run<Fixed64Benchmark>();
 #endif
 		}
 	}

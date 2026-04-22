@@ -1,4 +1,4 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=aba4c4aa_002Db9ae_002D434c_002Da7cf_002Dc7a6bc9fde39/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from Fixed64Test.cs" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;ProjectFile&gt;F319B15F-7622-466F-AF43-8EC6E84F0F0F/f:Fixed64Test.cs&lt;/ProjectFile&gt;&#xD;
+  &lt;Project Location="D:\gitee\GNumerics-cs\GNumerics\GNumerics.Test" Presentation="&amp;lt;GNumerics.Test&amp;gt;" /&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
