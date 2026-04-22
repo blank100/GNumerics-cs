@@ -4,21 +4,19 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>default</LangVersion>
-        <TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>
+        <TargetFrameworks>net6.0;netstandard2.1</TargetFrameworks>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-      <DefineConstants>TRACE</DefineConstants>
+      <DefineConstants>TRACE;USE_FIXED64</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-      <DefineConstants>TRACE</DefineConstants>
+      <DefineConstants>TRACE;USE_FIXED64</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
+      <ProjectReference Include="..\GNumerics\GNumerics.csproj" />
     </ItemGroup>
 
 </Project>

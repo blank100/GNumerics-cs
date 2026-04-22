@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GNumerics.Test", "GNumerics
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GNumerics.Benchmark", "GNumerics.Benchmark\GNumerics.Benchmark.csproj", "{4718EAF8-1BED-419F-BF0C-03C208591A32}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GMath", "GMath\GMath.csproj", "{D01ABC20-C1F0-42DE-8362-0137FA7E1F12}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{4718EAF8-1BED-419F-BF0C-03C208591A32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4718EAF8-1BED-419F-BF0C-03C208591A32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4718EAF8-1BED-419F-BF0C-03C208591A32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D01ABC20-C1F0-42DE-8362-0137FA7E1F12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D01ABC20-C1F0-42DE-8362-0137FA7E1F12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D01ABC20-C1F0-42DE-8362-0137FA7E1F12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D01ABC20-C1F0-42DE-8362-0137FA7E1F12}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
