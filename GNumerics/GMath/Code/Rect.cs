@@ -5,6 +5,7 @@ namespace Gal.Core
 	/// <summary>
 	///
 	/// </summary>
+	/// <author>gouanlin</author>
 	[Serializable]
 	public struct Rect : IEquatable<Rect>, IFormattable
 	{

@@ -1,5 +1,9 @@
 ﻿namespace Gal.Core;
 
+/// <summary>
+///
+/// </summary>
+/// <author>gouanlin</author>
 public static class GMath {
 #if USE_FIXED64
     public static readonly Single MaxSingle = Single.MaxValue;

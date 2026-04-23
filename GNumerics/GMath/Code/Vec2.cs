@@ -5,8 +5,9 @@ using System.Runtime.InteropServices;
 namespace Gal.Core
 {
 	/// <summary>
-	///
+	/// 2D向量
 	/// </summary>
+	/// <author>gouanlin</author>
 	[Serializable]
 #if USE_FIXED64
 	[StructLayout(LayoutKind.Explicit, Size = 16)]
