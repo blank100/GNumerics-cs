@@ -106,7 +106,7 @@ namespace Fixed64Test {
         [Fact]
         public void Floor_Random() {
             for (var i = 0; i < 1000; i++) {
-                var v = Random.Shared.NextDouble();
+                var v = Random.Shared.NextDouble() * double.MaxValue - (double.MaxValue * 0.5);
                 var expected = (decimal)Math.Floor(v);
                 var actual = (decimal)Fixed64.Floor((Fixed64)v);
                 Assert.Equal(expected, actual);
@@ -128,7 +128,7 @@ namespace Fixed64Test {
         [Fact]
         public void Truncate_Random() {
             for (var i = 0; i < 1000; i++) {
-                var v = Random.Shared.NextDouble();
+                var v = Random.Shared.NextDouble() * double.MaxValue - (double.MaxValue * 0.5);
                 var expected = (decimal)Math.Truncate(v);
                 var actual = (decimal)Fixed64.Truncate((Fixed64)v);
                 Assert.Equal(expected, actual);
