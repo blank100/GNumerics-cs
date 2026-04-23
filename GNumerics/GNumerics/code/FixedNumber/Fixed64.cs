@@ -6,7 +6,7 @@ namespace Gal.Core {
     /// </summary>
     /// <author>gouanlin</author>
     [Serializable]
-    public readonly struct Fixed64 : IEquatable<Fixed64>, IComparable<Fixed64>, IFormattable {
+    public readonly partial struct Fixed64 : IEquatable<Fixed64>, IComparable<Fixed64>, IFormattable {
         public const int FRACTION_BITS = 32;
 
         private const long OneRawValue = 1L << FRACTION_BITS;
@@ -110,6 +110,12 @@ namespace Gal.Core {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static explicit operator int(Fixed64 v) => (int)(v._raw >> FRACTION_BITS);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator Fixed64(uint v) => new((long)v << FRACTION_BITS);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static explicit operator uint(Fixed64 v) => (uint)(v._raw >> FRACTION_BITS);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static explicit operator Fixed64(long v) => new(v << FRACTION_BITS);

@@ -1,0 +1,125 @@
+﻿namespace SeaWarMath;
+
+/// <summary>
+///
+/// </summary>
+/// <author>gouanlin</author>
+public static class Math {
+#if USE_FIXED64
+    public static readonly Single MaxSingle = Single.MaxValue;
+    public static readonly Single MinSingle = Single.MinValue;
+#else
+    public const Single MaxSingle = Single.MaxValue;
+    public const Single MinSingle = Single.MinValue;
+#endif
+
+#if USE_FIXED64
+    public static readonly Single Deg2Rad = Single.Deg2Rad;
+    public static readonly Single Rad2Deg = Single.Rad2Deg;
+#else
+    public const Single Deg2Rad = 0.01745329251994329576f;
+    public const Single Rad2Deg = 57.2957795130823208767f;
+#endif
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Single Min(Single a, Single b) => a < b ? a : b;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Single Max(Single a, Single b) => a > b ? a : b;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Single Abs(Single a) => a < 0 ? -a : a;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Single Clamp(Single value, Single min, Single max) => value < min ? min : value > max ? max : value;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Double Clamp(Double value, Double min, Double max) => value < min ? min : value > max ? max : value;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Single Sign(Single v) {
+#if USE_FIXED64
+        return Single.Sign(v);
+#else
+        return MathF.Sign(v);
+#endif
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Single Sqrt(Single v) {
+#if USE_FIXED64
+        return Single.Sqrt(v);
+#else
+        return MathF.Sqrt(v);
+#endif
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Double Sqrt(Double v) {
+#if USE_FIXED64
+        return Double.Sqrt(v);
+#else
+        return Math.Sqrt(v);
+#endif
+    }
+
+    public static Single Sin(Single v) {
+#if USE_FIXED64
+        return Single.Sin(v);
+#else
+        return MathF.Sin(v);
+#endif
+    }
+
+    public static Double Sin(Double v) {
+#if USE_FIXED64
+        return Double.Sin(v);
+#else
+        return Math.Sin(v);
+#endif
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Single Cos(Single v) {
+#if USE_FIXED64
+        return Single.Cos(v);
+#else
+        return Math.Cos(v);
+#endif
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Double Cos(Double v) {
+#if USE_FIXED64
+        return Double.Cos(v);
+#else
+        return Math.Cos(v);
+#endif
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Single Acos(Single v) {
+#if USE_FIXED64
+        return Single.Acos(v);
+#else
+        return Math.Acos(v);
+#endif
+    }
+
+    public static Single Atan2(Single y, Single x) {
+#if USE_FIXED64
+        return Single.Atan2(y, x);
+#else
+        return MathF.Atan2(y, x);
+#endif
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Double Atan2(Double y, Double x) {
+#if USE_FIXED64
+        return Double.Atan2(y, x);
+#else
+        return Math.Atan2(y, x);
+#endif
+    }
+}

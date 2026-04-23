@@ -1,9 +1,8 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace Gal.Core
-{
-	/// <summary>
+namespace SeaWarMath {
+    /// <summary>
 	/// 2D向量
 	/// </summary>
 	/// <author>gouanlin</author>
@@ -13,7 +12,7 @@ namespace Gal.Core
 #else
 	[StructLayout(LayoutKind.Explicit, Size = 8)]
 #endif
-	public struct Vec2 : IEquatable<Vec2>, IFormattable
+	public struct Vector2 : IEquatable<Vector2>, IFormattable
 	{
 		[FieldOffset(0)]
 		public Single x;
@@ -48,7 +47,7 @@ namespace Gal.Core
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public Vec2(Single x, Single y) {
+		public Vector2(Single x, Single y) {
 			this.x = x;
 			this.y = y;
 		}
@@ -60,16 +59,16 @@ namespace Gal.Core
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Vec2 Lerp(Vec2 a, Vec2 b, Single t) {
+		public static Vector2 Lerp(Vector2 a, Vector2 b, Single t) {
 			t = Math.Clamp(t, 0, 1);
 			return new(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Vec2 LerpUnclamped(Vec2 a, Vec2 b, Single t) => new(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t);
+		public static Vector2 LerpUnclamped(Vector2 a, Vector2 b, Single t) => new(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Vec2 MoveTowards(Vec2 current, Vec2 target, Single maxDistanceDelta) {
+		public static Vector2 MoveTowards(Vector2 current, Vector2 target, Single maxDistanceDelta) {
 			var num1 = target.x - current.x;
 			var num2 = target.y - current.y;
 			var d = num1 * num1 + num2 * num2;
@@ -79,10 +78,10 @@ namespace Gal.Core
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Vec2 Scale(Vec2 a, Vec2 b) => new(a.x * b.x, a.y * b.y);
+		public static Vector2 Scale(Vector2 a, Vector2 b) => new(a.x * b.x, a.y * b.y);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void Scale(Vec2 scale) {
+		public void Scale(Vector2 scale) {
 			x *= scale.x;
 			y *= scale.y;
 		}
@@ -96,10 +95,10 @@ namespace Gal.Core
 				this = Zero;
 		}
 
-		public Vec2 Normalized {
+		public Vector2 Normalized {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get {
-				var normalized = new Vec2(x, y);
+				var normalized = new Vector2(x, y);
 				normalized.Normalize();
 				return normalized;
 			}
@@ -119,25 +118,25 @@ namespace Gal.Core
 		public override int GetHashCode() => x.GetHashCode() ^ y.GetHashCode() << 2;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public override bool Equals(object other) => other is Vec2 other1 && Equals(other1);
+		public override bool Equals(object other) => other is Vector2 other1 && Equals(other1);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public bool Equals(Vec2 other) => x == other.x && y == other.y;
+		public bool Equals(Vector2 other) => x == other.x && y == other.y;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Vec2 Reflect(Vec2 inDirection, Vec2 inNormal) {
+		public static Vector2 Reflect(Vector2 inDirection, Vector2 inNormal) {
 			var num = -2 * Dot(inNormal, inDirection);
 			return new(num * inNormal.x + inDirection.x, num * inNormal.y + inDirection.y);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Vec2 Perpendicular(Vec2 inDirection) => new(-inDirection.y, inDirection.x);
+		public static Vector2 Perpendicular(Vector2 inDirection) => new(-inDirection.y, inDirection.x);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Single Dot(Vec2 lhs, Vec2 rhs) => lhs.x * rhs.x + lhs.y * rhs.y;
+		public static Single Dot(Vector2 lhs, Vector2 rhs) => lhs.x * rhs.x + lhs.y * rhs.y;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Single Cross(Vec2 lhs, Vec2 rhs) => lhs.x * rhs.y - lhs.y * rhs.x;
+		public static Single Cross(Vector2 lhs, Vector2 rhs) => lhs.x * rhs.y - lhs.y * rhs.x;
 
 		public readonly Single Magnitude {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -150,23 +149,23 @@ namespace Gal.Core
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Single Angle(Vec2 from, Vec2 to) {
+		public static Single Angle(Vector2 from, Vector2 to) {
 			var num = (Single)Math.Sqrt(from.SqrMagnitude * to.SqrMagnitude);
-			return (Single)Math.Acos(Math.Clamp(Dot(from, to) / num, -1, 1)) * Helper.Rad2deg;
+			return (Single)Math.Acos(Math.Clamp(Dot(from, to) / num, -1, 1)) * Math.Rad2Deg;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Single SignedAngle(Vec2 from, Vec2 to) => Angle(from, to) * Math.Sign(from.x * to.y - from.y * to.x);
+		public static Single SignedAngle(Vector2 from, Vector2 to) => Angle(from, to) * Math.Sign(from.x * to.y - from.y * to.x);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Single Distance(Vec2 a, Vec2 b) {
+		public static Single Distance(Vector2 a, Vector2 b) {
 			var num1 = a.x - b.x;
 			var num2 = a.y - b.y;
 			return (Single)Math.Sqrt(num1 * num1 + num2 * num2);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Vec2 ClampMagnitude(Vec2 vector, Single maxLength) {
+		public static Vector2 ClampMagnitude(Vector2 vector, Single maxLength) {
 			var sqrMagnitude = vector.SqrMagnitude;
 			if (sqrMagnitude <= maxLength * maxLength) return vector;
 			var num1 = (Single)Math.Sqrt(sqrMagnitude);
@@ -175,46 +174,46 @@ namespace Gal.Core
 			return new(num2 * maxLength, num3 * maxLength);
 		}
 
-		public readonly Vec2 GetNormalizedAndLength(out Single length) {
+		public readonly Vector2 GetNormalizedAndLength(out Single length) {
 			length = Magnitude;
 			return length > 0 ? new(x / length, y / length) : Zero;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Vec2 Min(Vec2 lhs, Vec2 rhs) => new(Math.Min(lhs.x, rhs.x), Math.Min(lhs.y, rhs.y));
+		public static Vector2 Min(Vector2 lhs, Vector2 rhs) => new(Math.Min(lhs.x, rhs.x), Math.Min(lhs.y, rhs.y));
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Vec2 Max(Vec2 lhs, Vec2 rhs) => new(Math.Max(lhs.x, rhs.x), Math.Max(lhs.y, rhs.y));
+		public static Vector2 Max(Vector2 lhs, Vector2 rhs) => new(Math.Max(lhs.x, rhs.x), Math.Max(lhs.y, rhs.y));
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Vec2 operator +(Vec2 a, Vec2 b) => new(a.x + b.x, a.y + b.y);
+		public static Vector2 operator +(Vector2 a, Vector2 b) => new(a.x + b.x, a.y + b.y);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Vec2 operator -(Vec2 a, Vec2 b) => new(a.x - b.x, a.y - b.y);
+		public static Vector2 operator -(Vector2 a, Vector2 b) => new(a.x - b.x, a.y - b.y);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Vec2 operator *(Vec2 a, Vec2 b) => new(a.x * b.x, a.y * b.y);
+		public static Vector2 operator *(Vector2 a, Vector2 b) => new(a.x * b.x, a.y * b.y);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Vec2 operator /(Vec2 a, Vec2 b) => new(a.x / b.x, a.y / b.y);
+		public static Vector2 operator /(Vector2 a, Vector2 b) => new(a.x / b.x, a.y / b.y);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Vec2 operator -(Vec2 a) => new(-a.x, -a.y);
+		public static Vector2 operator -(Vector2 a) => new(-a.x, -a.y);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Vec2 operator *(Vec2 a, Single d) => new(a.x * d, a.y * d);
+		public static Vector2 operator *(Vector2 a, Single d) => new(a.x * d, a.y * d);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Vec2 operator *(Single d, Vec2 a) => new(a.x * d, a.y * d);
+		public static Vector2 operator *(Single d, Vector2 a) => new(a.x * d, a.y * d);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Vec2 operator /(Vec2 a, Single d) => new(a.x / d, a.y / d);
+		public static Vector2 operator /(Vector2 a, Single d) => new(a.x / d, a.y / d);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool operator ==(Vec2 lhs, Vec2 rhs) => lhs.x == rhs.x && lhs.y == rhs.y;
+		public static bool operator ==(Vector2 lhs, Vector2 rhs) => lhs.x == rhs.x && lhs.y == rhs.y;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool operator !=(Vec2 lhs, Vec2 rhs) => !(lhs == rhs);
+		public static bool operator !=(Vector2 lhs, Vector2 rhs) => !(lhs == rhs);
 
 		/// <summary>
 		///  The triple product of {@link Vector2}s is defined as:
@@ -238,9 +237,9 @@ namespace Gal.Core
 		/// <param name="b"></param>
 		/// <param name="c"></param>
 		/// <returns></returns>
-		public static Vec2 TripleProduct(Vec2 a, Vec2 b, Vec2 c) {
+		public static Vector2 TripleProduct(Vector2 a, Vector2 b, Vector2 c) {
 			// expanded version of above formula
-			Vec2 r = new Vec2();
+			Vector2 r = new Vector2();
 
 			/*
 			 * In the following we can substitute ac and bc  r.x and r.y
@@ -259,32 +258,32 @@ namespace Gal.Core
 			return r;
 		}
 
-		public static Vec2 Zero {
+		public static Vector2 Zero {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get;
 		} = new(0, 0);
 
-		public static Vec2 One {
+		public static Vector2 One {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get;
 		} = new(1, 1);
 
-		public static Vec2 Up {
+		public static Vector2 Up {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get;
 		} = new(0, 1);
 
-		public static Vec2 Down {
+		public static Vector2 Down {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get;
 		} = new(0, -1);
 
-		public static Vec2 Left {
+		public static Vector2 Left {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get;
 		} = new(-1, 0);
 
-		public static Vec2 Right {
+		public static Vector2 Right {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get;
 		} = new(1, 0);
