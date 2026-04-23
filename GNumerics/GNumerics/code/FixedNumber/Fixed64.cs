@@ -180,12 +180,6 @@ namespace Gal.Core {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fixed64 operator --(Fixed64 a) => new(a._raw - OneRawValue);
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fixed64 operator *(Fixed64 a, Fixed64 b) => new(Fixed64Utils.FastMul(a._raw, b._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
 
@@ -292,9 +286,15 @@ namespace Gal.Core {
         public static Fixed64 SetRawValue(long value) => new(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed64 Truncate(Fixed64 value) {
-            if(value._raw>=0) return new((long)((ulong)value._raw & INTEGER_PART_MASK));
-            return new(-(long)((ulong)-value._raw & INTEGER_PART_MASK));
+        public static Fixed64 Truncate(Fixed64 value)
+        {
+            unchecked {
+                long raw = value._raw;
+                // 如果 raw < 0，offset = FRACTIONAL_PART_MASK；否则 offset = 0
+                long offset = (raw >> 63) & (long)FRACTIONAL_PART_MASK;
+                // 对于负数，加上偏移量后再屏蔽，能实现向零取整
+                return new((raw + offset) & (long)INTEGER_PART_MASK);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -342,6 +342,22 @@ namespace Gal.Core {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fixed64 Pow2(Fixed64 x) =>
             new(Fixed64Utils.Pow2(x._raw, OneRawValue, FRACTION_BITS, INTEGER_PART_MASK, FRACTIONAL_PART_MASK, _log2MinRawValue, _log2MaxRawValue, LN2._raw));
+
+        /// <summary>
+        /// Log2(e) <br/>
+        /// 1.4426950408889634D
+        /// </summary>
+        public static readonly Fixed64 Log2E = (Fixed64)1.4426950408889634;
+
+        /// <summary>
+        /// 计算自然指数 e^x
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Fixed64 Exp(Fixed64 x) {
+            // 逻辑：e^x = 2^(x * log2(e))
+            // 利用 Pow2 已经处理好的范围缩减和多项式近似逻辑
+            return Pow2(x * Log2E);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fixed64 Log2(Fixed64 x) => new(Fixed64Utils.Log2(x._raw, OneRawValue, FRACTION_BITS, FRACTIONAL_PART_MASK));

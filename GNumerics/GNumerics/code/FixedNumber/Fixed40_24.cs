@@ -48,6 +48,9 @@ namespace Gal.Core {
         /// 0.6931471805599453D
         public static readonly Fixed40_24 LN2 = new(11629080); //0.6931471824645996
 
+        // 1/LN2
+        public static readonly Fixed40_24 InvLn2 = 1 / LN2;
+
         /// Asin Padé approximations<br/>
         /// 0.183320102085006D
         public static readonly Fixed40_24 SPadeA1 = new(3075601); //0.18332010507583618
@@ -180,12 +183,6 @@ namespace Gal.Core {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fixed40_24 operator --(Fixed40_24 a) => new(a._raw - OneRawValue);
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fixed40_24 operator *(Fixed40_24 a, Fixed40_24 b) => new(Fixed64Utils.FastMul(a._raw, b._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
 
@@ -293,6 +290,17 @@ namespace Gal.Core {
         public static Fixed40_24 SetRawValue(long value) => new(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Fixed40_24 Truncate(Fixed40_24 value) {
+            unchecked {
+                long raw = value._raw;
+                // 如果 raw < 0，offset = FRACTIONAL_PART_MASK；否则 offset = 0
+                long offset = (raw >> 63) & (long)FRACTIONAL_PART_MASK;
+                // 对于负数，加上偏移量后再屏蔽，能实现向零取整
+                return new((raw + offset) & (long)INTEGER_PART_MASK);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fixed40_24 Floor(Fixed40_24 value) => new((long)((ulong)value._raw & INTEGER_PART_MASK));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -337,6 +345,48 @@ namespace Gal.Core {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fixed40_24 Pow2(Fixed40_24 x) =>
             new(Fixed64Utils.Pow2(x._raw, OneRawValue, FRACTION_BITS, INTEGER_PART_MASK, FRACTIONAL_PART_MASK, _log2MinRawValue, _log2MaxRawValue, LN2._raw));
+
+        // --- Padé 近似系数 ---
+// C1 = 1/2 = 0.5
+        private static readonly Fixed40_24 PadeC1 = new(8388608);
+// C2 = 1/10 = 0.1
+        private static readonly Fixed40_24 PadeC2 = new(1677722); 
+// C3 = 1/120 = 0.00833333...
+        private static readonly Fixed40_24 PadeC3 = new(139810);
+
+        /// <summary>
+        /// 基于 Padé [3/3] 近似的高精度 Exp 函数
+        /// </summary>
+        public static Fixed40_24 Exp(Fixed40_24 x) {
+            if (x._raw == 0) return One;
+            if (x._raw <= _log2MinRawValue) return Zero;
+            if (x._raw >= _log2MaxRawValue) return MaxValue;
+
+            // 1. 范围缩减 (与之前一致)
+            // k = round(x / ln2)
+            long k = (Fixed64Utils.FastMul(x._raw, InvLn2._raw, FRACTION_BITS, FRACTIONAL_PART_MASK) + HalfOneRawValue) >> FRACTION_BITS;
+            // r = x - k * ln2
+            Fixed40_24 r = new(x._raw - (k * LN2._raw));
+
+            // 2. Padé [3/3] 近似计算
+            // 我们计算 r^2
+            Fixed40_24 r2 = r * r;
+
+            // U = r * ( (1/120 * r^2) + 1/2 )
+            Fixed40_24 u = r * (r2 * PadeC3 + PadeC1);
+
+            // V = (1/10 * r^2) + 1
+            Fixed40_24 v = r2 * PadeC2 + One;
+
+            // e^r = (V + U) / (V - U)
+            // 注意：由于 r 范围极小 (abs < 0.346)，V-U 永远大于 0
+            Fixed40_24 er = (v + u) / (v - u);
+
+            // 3. 重组结果: er * 2^k
+            if (k == 0) return er;
+            if (k > 0) return new(er._raw << (int)k);
+            return new(er._raw >> (int)-k);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fixed40_24 Log2(Fixed40_24 x) => new(Fixed64Utils.Log2(x._raw, OneRawValue, FRACTION_BITS, FRACTIONAL_PART_MASK));
