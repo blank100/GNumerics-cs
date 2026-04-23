@@ -10,5 +10,5 @@ global using Math = Gal.Core.Fixed64;
 #else
 global using Double = System.Double;
 global using Single = System.Single;
-global using Math = System.Math;
+global using Math = Math;
 #endif

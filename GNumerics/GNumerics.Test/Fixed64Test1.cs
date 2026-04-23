@@ -3,12 +3,13 @@ using Gal.Core;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Fixed64Test
-{
-    public class Fixed64Test1
-    {
+namespace Fixed64Test {
+    public class Fixed64Test1 {
         private readonly ITestOutputHelper _TestOutputHelper;
-        public Fixed64Test1(ITestOutputHelper testOutputHelper) { _TestOutputHelper = testOutputHelper; }
+
+        public Fixed64Test1(ITestOutputHelper testOutputHelper) {
+            _TestOutputHelper = testOutputHelper;
+        }
 
         [Fact]
         public void DoubleToFix64AndBack() {
@@ -19,9 +20,13 @@ namespace Fixed64Test
             }
         }
 
-        static void AreEqualWithinPrecision(decimal value1, decimal value2) { Assert.True(Math.Abs(value2 - value1) < Fixed64.Precision); }
+        static void AreEqualWithinPrecision(decimal value1, decimal value2) {
+            Assert.True(Math.Abs(value2 - value1) < Fixed64.Precision);
+        }
 
-        static void AreEqualWithinPrecision(double value1, double value2) { Assert.True(Math.Abs(value2 - value1) < (double)Fixed64.Precision); }
+        static void AreEqualWithinPrecision(double value1, double value2) {
+            Assert.True(Math.Abs(value2 - value1) < (double)Fixed64.Precision);
+        }
 
         [Fact]
         public void DecimalToFix64AndBack() {
@@ -94,6 +99,38 @@ namespace Fixed64Test
             for (var i = 0; i < sources.Length; ++i) {
                 var actual = (decimal)Fixed64.Floor((Fixed64)sources[i]);
                 var expected = expecteds[i];
+                Assert.Equal(expected, actual);
+            }
+        }
+
+        [Fact]
+        public void Floor_Random() {
+            for (var i = 0; i < 1000; i++) {
+                var v = Random.Shared.NextDouble();
+                var expected = (decimal)Math.Floor(v);
+                var actual = (decimal)Fixed64.Floor((Fixed64)v);
+                Assert.Equal(expected, actual);
+            }
+        }
+
+        [Fact]
+        public void Truncate() {
+            var sources = new[] { -5.1m, -1, 0, 1, 5.1m };
+            var expecteds = new[] { -5m, -1, 0, 1, 5m };
+            for (var i = 0; i < sources.Length; ++i) {
+                var actual = (decimal)Fixed64.Truncate((Fixed64)sources[i]);
+                var t = Math.Truncate(sources[i]);
+                var expected = expecteds[i];
+                Assert.Equal(expected, actual);
+            }
+        }
+
+        [Fact]
+        public void Truncate_Random() {
+            for (var i = 0; i < 1000; i++) {
+                var v = Random.Shared.NextDouble();
+                var expected = (decimal)Math.Truncate(v);
+                var actual = (decimal)Fixed64.Truncate((Fixed64)v);
                 Assert.Equal(expected, actual);
             }
         }

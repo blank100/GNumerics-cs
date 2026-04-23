@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace SeaWarMath {
+namespace SeaWar.Mathematics {
     /// <summary>
     /// 简单的2D变换矩阵,它只包含位移和旋转,不包含缩放
     /// 位移描述，含坐标和角度(弧度制)

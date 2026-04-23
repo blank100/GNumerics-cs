@@ -191,6 +191,7 @@ namespace Gal.Core {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fixed64 FastMul(Fixed64 a, Fixed64 b) => a * b;
+
         public static Fixed64 operator *(Fixed64 a, int b) => new(Fixed64Utils.FastMul(a._raw, (long)b << FRACTION_BITS, FRACTION_BITS, FRACTIONAL_PART_MASK));
 
         public static Fixed64 FastMul(Fixed64 a, int b) => new(a._raw * b);
@@ -291,6 +292,12 @@ namespace Gal.Core {
         public static Fixed64 SetRawValue(long value) => new(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Fixed64 Truncate(Fixed64 value) {
+            if(value._raw>=0) return new((long)((ulong)value._raw & INTEGER_PART_MASK));
+            return new(-(long)((ulong)-value._raw & INTEGER_PART_MASK));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fixed64 Floor(Fixed64 value) => new((long)((ulong)value._raw & INTEGER_PART_MASK));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -328,13 +335,13 @@ namespace Gal.Core {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fixed64 Pow(Fixed64 value, int exponent) => new(Fixed64Utils.Pow(value._raw, exponent, OneRawValue, FRACTION_BITS, FRACTIONAL_PART_MASK));
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fixed64 Pow(Fixed64 b, Fixed64 exp) =>
             new(Fixed64Utils.Pow(b.Raw, exp.Raw, OneRawValue, FRACTION_BITS, INTEGER_PART_MASK, FRACTIONAL_PART_MASK, _log2MinRawValue, _log2MaxRawValue, LN2._raw));
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fixed64 Pow2(Fixed64 x) =>
-			new(Fixed64Utils.Pow2(x._raw, OneRawValue, FRACTION_BITS, INTEGER_PART_MASK, FRACTIONAL_PART_MASK, _log2MinRawValue, _log2MaxRawValue, LN2._raw));
+            new(Fixed64Utils.Pow2(x._raw, OneRawValue, FRACTION_BITS, INTEGER_PART_MASK, FRACTIONAL_PART_MASK, _log2MinRawValue, _log2MaxRawValue, LN2._raw));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fixed64 Log2(Fixed64 x) => new(Fixed64Utils.Log2(x._raw, OneRawValue, FRACTION_BITS, FRACTIONAL_PART_MASK));

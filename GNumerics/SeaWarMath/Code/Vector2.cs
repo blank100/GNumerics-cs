@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace SeaWarMath {
+namespace SeaWar.Mathematics {
     /// <summary>
 	/// 2D向量
 	/// </summary>

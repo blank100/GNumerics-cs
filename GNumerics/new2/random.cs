@@ -2,7 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using static SeaWar.Mathematics.math;
 using System.Diagnostics;
-
+using Unity.IL2CPP.CompilerServices;
 
 namespace SeaWar.Mathematics
 {
@@ -12,7 +12,7 @@ namespace SeaWar.Mathematics
     /// Core functionality is integer multiplication free to improve vectorization
     /// on less capable SIMD instruction sets.
     /// </summary>
-
+    [Il2CppEagerStaticClassConstruction]
     [Serializable]
     public partial struct Random
     {

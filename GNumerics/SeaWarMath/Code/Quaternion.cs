@@ -1,4 +1,4 @@
-﻿namespace SeaWarMath {
+﻿namespace SeaWar.Mathematics {
     /// <summary>
     ///
     /// </summary>

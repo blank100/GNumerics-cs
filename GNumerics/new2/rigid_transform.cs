@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using Unity.IL2CPP.CompilerServices;
 using static SeaWar.Mathematics.math;
 
 namespace SeaWar.Mathematics
@@ -7,6 +8,7 @@ namespace SeaWar.Mathematics
     /// <summary>
     /// A rigid transformation type.
     /// </summary>
+    [Il2CppEagerStaticClassConstruction]
     [Serializable]
     public struct RigidTransform
     {

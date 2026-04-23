@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace SeaWarMath {
+namespace SeaWar.Mathematics {
     /// <summary>
     /// 复数,可以用于表示2D旋转
     /// </summary>

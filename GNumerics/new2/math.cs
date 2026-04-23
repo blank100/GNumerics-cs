@@ -375,6 +375,106 @@
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double asdouble(ulong x) { return asdouble((long)x); }
 
+
+        /// <summary>Returns true if the input Single is a finite floating point value, false otherwise.</summary>
+        /// <param name="x">The Single value to test.</param>
+        /// <returns>True if the Single is finite, false otherwise.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool isfinite(Single x) { return abs(x) < Single.PositiveInfinity; }
+
+        /// <summary>Returns a bool2 indicating for each component of a float2 whether it is a finite floating point value.</summary>
+        /// <param name="x">The float2 value to test.</param>
+        /// <returns>A bool2 where it is true in a component if that component is finite, false otherwise.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool2 isfinite(float2 x) { return abs(x) < Single.PositiveInfinity; }
+
+        /// <summary>Returns a bool3 indicating for each component of a float3 whether it is a finite floating point value.</summary>
+        /// <param name="x">The float3 value to test.</param>
+        /// <returns>A bool3 where it is true in a component if that component is finite, false otherwise.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool3 isfinite(float3 x) { return abs(x) < Single.PositiveInfinity; }
+
+        /// <summary>Returns a bool4 indicating for each component of a float4 whether it is a finite floating point value.</summary>
+        /// <param name="x">The float4 value to test.</param>
+        /// <returns>A bool4 where it is true in a component if that component is finite, false otherwise.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool4 isfinite(float4 x) { return abs(x) < Single.PositiveInfinity; }
+
+
+        /// <summary>Returns true if the input Double is a finite floating point value, false otherwise.</summary>
+        /// <param name="x">The Double value to test.</param>
+        /// <returns>True if the Double is finite, false otherwise.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool isfinite(Double x) { return abs(x) < Double.PositiveInfinity; }
+
+        /// <summary>Returns a bool2 indicating for each component of a double2 whether it is a finite floating point value.</summary>
+        /// <param name="x">The double2 value to test.</param>
+        /// <returns>A bool2 where it is true in a component if that component is finite, false otherwise.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool2 isfinite(double2 x) { return abs(x) < Double.PositiveInfinity; }
+
+        /// <summary>Returns a bool3 indicating for each component of a double3 whether it is a finite floating point value.</summary>
+        /// <param name="x">The double3 value to test.</param>
+        /// <returns>A bool3 where it is true in a component if that component is finite, false otherwise.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool3 isfinite(double3 x) { return abs(x) < Double.PositiveInfinity; }
+
+        /// <summary>Returns a bool4 indicating for each component of a double4 whether it is a finite floating point value.</summary>
+        /// <param name="x">The double4 value to test.</param>
+        /// <returns>A bool4 where it is true in a component if that component is finite, false otherwise.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool4 isfinite(double4 x) { return abs(x) < Double.PositiveInfinity; }
+
+
+        /// <summary>Returns true if the input Single is an infinite floating point value, false otherwise.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>True if the input was an infinite value; false otherwise.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool isinf(Single x) { return abs(x) == Single.PositiveInfinity; }
+
+        /// <summary>Returns a bool2 indicating for each component of a float2 whether it is an infinite floating point value.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>True if the component was an infinite value; false otherwise.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool2 isinf(float2 x) { return abs(x) == Single.PositiveInfinity; }
+
+        /// <summary>Returns a bool3 indicating for each component of a float3 whether it is an infinite floating point value.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>True if the component was an infinite value; false otherwise.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool3 isinf(float3 x) { return abs(x) == Single.PositiveInfinity; }
+
+        /// <summary>Returns a bool4 indicating for each component of a float4 whether it is an infinite floating point value.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>True if the component was an infinite value; false otherwise.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool4 isinf(float4 x) { return abs(x) == Single.PositiveInfinity; }
+
+        /// <summary>Returns true if the input Double is an infinite floating point value, false otherwise.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>True if the input was an infinite value; false otherwise.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool isinf(Double x) { return abs(x) == Double.PositiveInfinity; }
+
+        /// <summary>Returns a bool2 indicating for each component of a double2 whether it is an infinite floating point value.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>True if the component was an infinite value; false otherwise.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool2 isinf(double2 x) { return abs(x) == Double.PositiveInfinity; }
+
+        /// <summary>Returns a bool3 indicating for each component of a double3 whether it is an infinite floating point value.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>True if the component was an infinite value; false otherwise.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool3 isinf(double3 x) { return abs(x) == Double.PositiveInfinity; }
+
+        /// <summary>Returns a bool4 indicating for each component of a double4 whether it is an infinite floating point value.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>True if the component was an infinite value; false otherwise.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool4 isinf(double4 x) { return abs(x) == Double.PositiveInfinity; }
+
+
         /// <summary>Returns true if the input Single is a NaN (not a number) floating point value, false otherwise.</summary>
         /// <remarks>
         /// NaN has several representations and may vary across architectures. Use this function to check if you have a NaN.
@@ -637,7 +737,7 @@
         /// <param name="y">The second input value.</param>
         /// <returns>The minimum of the two input values.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single min(Single x, Single y) { return x < y ? x : y; }
+        public static Single min(Single x, Single y) { return Single.IsNaN(y) || x < y ? x : y; }
 
         /// <summary>Returns the componentwise minimum of two float2 vectors.</summary>
         /// <param name="x">The first input value.</param>
@@ -666,7 +766,7 @@
         /// <param name="y">The second input value.</param>
         /// <returns>The minimum of the two input values.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double min(Double x, Double y) { return x < y ? x : y; }
+        public static Double min(Double x, Double y) { return Double.IsNaN(y) || x < y ? x : y; }
 
         /// <summary>Returns the componentwise minimum of two double2 vectors.</summary>
         /// <param name="x">The first input value.</param>
@@ -769,7 +869,7 @@
         /// <param name="y">The second input value.</param>
         /// <returns>The maximum of the two input values.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single max(Single x, Single y) { return x > y ? x : y; }
+        public static Single max(Single x, Single y) { return Single.IsNaN(y) || x > y ? x : y; }
 
         /// <summary>Returns the componentwise maximum of two float2 vectors.</summary>
         /// <param name="x">The first input value.</param>
@@ -798,7 +898,7 @@
         /// <param name="y">The second input value.</param>
         /// <returns>The maximum of the two input values.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double max(Double x, Double y) { return x > y ? x : y; }
+        public static Double max(Double x, Double y) { return Double.IsNaN(y) || x > y ? x : y; }
 
         /// <summary>Returns the componentwise maximum of two double2 vectors.</summary>
         /// <param name="x">The first input value.</param>
@@ -1763,6 +1863,57 @@
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double4 tan(double4 x) { return new double4(tan(x.x), tan(x.y), tan(x.z), tan(x.w)); }
 
+
+        /// <summary>Returns the hyperbolic tangent of a Single value.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The hyperbolic tangent of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single tanh(Single x) { return (Single)Math.Tanh(x); }
+
+        /// <summary>Returns the componentwise hyperbolic tangent of a float2 vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The componentwise hyperbolic tangent of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float2 tanh(float2 x) { return new float2(tanh(x.x), tanh(x.y)); }
+
+        /// <summary>Returns the componentwise hyperbolic tangent of a float3 vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The componentwise hyperbolic tangent of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float3 tanh(float3 x) { return new float3(tanh(x.x), tanh(x.y), tanh(x.z)); }
+
+        /// <summary>Returns the componentwise hyperbolic tangent of a float4 vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The componentwise hyperbolic tangent of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float4 tanh(float4 x) { return new float4(tanh(x.x), tanh(x.y), tanh(x.z), tanh(x.w)); }
+
+
+        /// <summary>Returns the hyperbolic tangent of a Double value.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The hyperbolic tangent of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double tanh(Double x) { return Math.Tanh(x); }
+
+        /// <summary>Returns the componentwise hyperbolic tangent of a double2 vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The componentwise hyperbolic tangent of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static double2 tanh(double2 x) { return new double2(tanh(x.x), tanh(x.y)); }
+
+        /// <summary>Returns the componentwise hyperbolic tangent of a double3 vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The componentwise hyperbolic tangent of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static double3 tanh(double3 x) { return new double3(tanh(x.x), tanh(x.y), tanh(x.z)); }
+
+        /// <summary>Returns the componentwise hyperbolic tangent of a double4 vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The componentwise hyperbolic tangent of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static double4 tanh(double4 x) { return new double4(tanh(x.x), tanh(x.y), tanh(x.z), tanh(x.w)); }
+
+
         /// <summary>Returns the arctangent of a Single value.</summary>
         /// <param name="x">A tangent value, usually the ratio y/x on the unit circle.</param>
         /// <returns>The arctangent of the input, in radians.</returns>
@@ -1920,6 +2071,57 @@
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double4 cos(double4 x) { return new double4(cos(x.x), cos(x.y), cos(x.z), cos(x.w)); }
 
+
+        /// <summary>Returns the hyperbolic cosine of a Single value.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The hyperbolic cosine of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single cosh(Single x) { return (Single)Math.Cosh(x); }
+
+        /// <summary>Returns the componentwise hyperbolic cosine of a float2 vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The componentwise hyperbolic cosine of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float2 cosh(float2 x) { return new float2(cosh(x.x), cosh(x.y)); }
+
+        /// <summary>Returns the componentwise hyperbolic cosine of a float3 vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The componentwise hyperbolic cosine of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float3 cosh(float3 x) { return new float3(cosh(x.x), cosh(x.y), cosh(x.z)); }
+
+        /// <summary>Returns the componentwise hyperbolic cosine of a float4 vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The componentwise hyperbolic cosine of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float4 cosh(float4 x) { return new float4(cosh(x.x), cosh(x.y), cosh(x.z), cosh(x.w)); }
+
+
+        /// <summary>Returns the hyperbolic cosine of a Double value.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The hyperbolic cosine of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double cosh(Double x) { return Math.Cosh(x); }
+
+        /// <summary>Returns the componentwise hyperbolic cosine of a double2 vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The componentwise hyperbolic cosine of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static double2 cosh(double2 x) { return new double2(cosh(x.x), cosh(x.y)); }
+
+        /// <summary>Returns the componentwise hyperbolic cosine of a double3 vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The componentwise hyperbolic cosine of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static double3 cosh(double3 x) { return new double3(cosh(x.x), cosh(x.y), cosh(x.z)); }
+
+        /// <summary>Returns the componentwise hyperbolic cosine of a double4 vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The componentwise hyperbolic cosine of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static double4 cosh(double4 x) { return new double4(cosh(x.x), cosh(x.y), cosh(x.z), cosh(x.w)); }
+
+
         /// <summary>Returns the arccosine of a Single value.</summary>
         /// <param name="x">Input value.</param>
         /// <returns>The arccosine of the input.</returns>
@@ -2018,6 +2220,57 @@
         /// <returns>The componentwise sine of the input.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double4 sin(double4 x) { return new double4(sin(x.x), sin(x.y), sin(x.z), sin(x.w)); }
+
+
+        /// <summary>Returns the hyperbolic sine of a Single value.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The hyperbolic sine of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single sinh(Single x) { return (Single)Math.Sinh((Single)x); }
+
+        /// <summary>Returns the componentwise hyperbolic sine of a float2 vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The componentwise hyperbolic sine of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float2 sinh(float2 x) { return new float2(sinh(x.x), sinh(x.y)); }
+
+        /// <summary>Returns the componentwise hyperbolic sine of a float3 vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The componentwise hyperbolic sine of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float3 sinh(float3 x) { return new float3(sinh(x.x), sinh(x.y), sinh(x.z)); }
+
+        /// <summary>Returns the componentwise hyperbolic sine of a float4 vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The componentwise hyperbolic sine of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float4 sinh(float4 x) { return new float4(sinh(x.x), sinh(x.y), sinh(x.z), sinh(x.w)); }
+
+
+        /// <summary>Returns the hyperbolic sine of a Double value.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The hyperbolic sine of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double sinh(Double x) { return Math.Sinh(x); }
+
+        /// <summary>Returns the componentwise hyperbolic sine of a double2 vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The componentwise hyperbolic sine of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static double2 sinh(double2 x) { return new double2(sinh(x.x), sinh(x.y)); }
+
+        /// <summary>Returns the componentwise hyperbolic sine of a double3 vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The componentwise hyperbolic sine of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static double3 sinh(double3 x) { return new double3(sinh(x.x), sinh(x.y), sinh(x.z)); }
+
+        /// <summary>Returns the componentwise hyperbolic sine of a double4 vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The componentwise hyperbolic sine of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static double4 sinh(double4 x) { return new double4(sinh(x.x), sinh(x.y), sinh(x.z), sinh(x.w)); }
+
 
         /// <summary>Returns the arcsine of a Single value.</summary>
         /// <param name="x">Input value.</param>
@@ -3373,7 +3626,7 @@
         public static Single smoothstep(Single a, Single b, Single x)
         {
             var t = saturate((x - a) / (b - a));
-            return t * t * (3 - (2 * t));
+            return t * t * (3.0f - (2 * t));
         }
 
         /// <summary>Returns a componentwise smooth Hermite interpolation between 0 and 1 when x is in [a, b].</summary>
@@ -3385,7 +3638,7 @@
         public static float2 smoothstep(float2 a, float2 b, float2 x)
         {
             var t = saturate((x - a) / (b - a));
-            return t * t * (3 - (2 * t));
+            return t * t * (3.0f - (2 * t));
         }
 
         /// <summary>Returns a componentwise smooth Hermite interpolation between 0 and 1 when x is in [a, b].</summary>
@@ -3397,7 +3650,7 @@
         public static float3 smoothstep(float3 a, float3 b, float3 x)
         {
             var t = saturate((x - a) / (b - a));
-            return t * t * (3 - (2 * t));
+            return t * t * (3.0f - (2 * t));
         }
 
         /// <summary>Returns a componentwise smooth Hermite interpolation between 0 and 1 when x is in [a, b].</summary>
@@ -3409,7 +3662,7 @@
         public static float4 smoothstep(float4 a, float4 b, float4 x)
         {
             var t = saturate((x - a) / (b - a));
-            return t * t * (3 - (2 * t));
+            return t * t * (3.0f - (2 * t));
         }
 
 
@@ -3422,7 +3675,7 @@
         public static Double smoothstep(Double a, Double b, Double x)
         {
             var t = saturate((x - a) / (b - a));
-            return t * t * (3 - (2 * t));
+            return t * t * (3.0 - (2.0 * t));
         }
 
         /// <summary>Returns a componentwise smooth Hermite interpolation between 0 and 1 when x is in [a, b].</summary>
@@ -3434,7 +3687,7 @@
         public static double2 smoothstep(double2 a, double2 b, double2 x)
         {
             var t = saturate((x - a) / (b - a));
-            return t * t * (3 - (2 * t));
+            return t * t * (3.0 - (2.0 * t));
         }
 
         /// <summary>Returns a componentwise smooth Hermite interpolation between 0 and 1 when x is in [a, b].</summary>
@@ -3446,7 +3699,7 @@
         public static double3 smoothstep(double3 a, double3 b, double3 x)
         {
             var t = saturate((x - a) / (b - a));
-            return t * t * (3 - (2 * t));
+            return t * t * (3.0 - (2.0 * t));
         }
 
         /// <summary>Returns a componentwise smooth Hermite interpolation between 0 and 1 when x is in [a, b].</summary>
@@ -3458,7 +3711,7 @@
         public static double4 smoothstep(double4 a, double4 b, double4 x)
         {
             var t = saturate((x - a) / (b - a));
-            return t * t * (3 - (2 * t));
+            return t * t * (3.0 - (2.0 * t));
         }
 
 
@@ -3999,21 +4252,21 @@
         /// <param name="n">Normal vector.</param>
         /// <returns>Reflection vector.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float2 reflect(float2 i, float2 n) { return i - 2 * n * dot(i, n); }
+        public static float2 reflect(float2 i, float2 n) { return i - 2f * n * dot(i, n); }
 
         /// <summary>Given an incident vector i and a normal vector n, returns the reflection vector r = i - 2 * dot(i, n) * n.</summary>
         /// <param name="i">Incident vector.</param>
         /// <param name="n">Normal vector.</param>
         /// <returns>Reflection vector.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float3 reflect(float3 i, float3 n) { return i - 2 * n * dot(i, n); }
+        public static float3 reflect(float3 i, float3 n) { return i - 2f * n * dot(i, n); }
 
         /// <summary>Given an incident vector i and a normal vector n, returns the reflection vector r = i - 2 * dot(i, n) * n.</summary>
         /// <param name="i">Incident vector.</param>
         /// <param name="n">Normal vector.</param>
         /// <returns>Reflection vector.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float4 reflect(float4 i, float4 n) { return i - 2 * n * dot(i, n); }
+        public static float4 reflect(float4 i, float4 n) { return i - 2f * n * dot(i, n); }
 
 
         /// <summary>Given an incident vector i and a normal vector n, returns the reflection vector r = i - 2.0 * dot(i, n) * n.</summary>
@@ -4187,7 +4440,9 @@
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float2 projectsafe(float2 a, float2 b, float2 defaultValue = new float2())
         {
-            return project(a, b);
+            var proj = project(a, b);
+
+            return select(defaultValue, proj, all(isfinite(proj)));
         }
 
         /// <summary>
@@ -4206,7 +4461,9 @@
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float3 projectsafe(float3 a, float3 b, float3 defaultValue = new float3())
         {
-            return project(a, b);
+            var proj = project(a, b);
+
+            return select(defaultValue, proj, all(isfinite(proj)));
         }
 
         /// <summary>
@@ -4225,7 +4482,9 @@
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float4 projectsafe(float4 a, float4 b, float4 defaultValue = new float4())
         {
-            return project(a, b);
+            var proj = project(a, b);
+
+            return select(defaultValue, proj, all(isfinite(proj)));
         }
 
         /// <summary>
@@ -4298,7 +4557,9 @@
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double2 projectsafe(double2 a, double2 b, double2 defaultValue = new double2())
         {
-            return project(a, b);
+            var proj = project(a, b);
+
+            return select(defaultValue, proj, all(isfinite(proj)));
         }
 
         /// <summary>
@@ -4317,7 +4578,9 @@
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double3 projectsafe(double3 a, double3 b, double3 defaultValue = new double3())
         {
-            return project(a, b);
+            var proj = project(a, b);
+
+            return select(defaultValue, proj, all(isfinite(proj)));
         }
 
         /// <summary>
@@ -4336,7 +4599,9 @@
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double4 projectsafe(double4 a, double4 b, double4 defaultValue = new double4())
         {
-            return project(a, b);
+            var proj = project(a, b);
+
+            return select(defaultValue, proj, all(isfinite(proj)));
         }
 
         /// <summary>Conditionally flips a vector n if two vectors i and ng are pointing in the same direction. Returns n if dot(i, ng) &lt; 0, -n otherwise.</summary>
@@ -4540,6 +4805,253 @@
         /// <returns>Number of bits set to 1 within x.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int countbits(long x) { return countbits((ulong)x); }
+
+
+        /// <summary>Returns the componentwise number of leading zeros in the binary representations of an int vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The number of leading zeros of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int lzcnt(int x) { return lzcnt((uint)x); }
+
+        /// <summary>Returns the componentwise number of leading zeros in the binary representations of an int2 vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The componentwise number of leading zeros of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int2 lzcnt(int2 x) { return int2(lzcnt(x.x), lzcnt(x.y)); }
+
+        /// <summary>Returns the componentwise number of leading zeros in the binary representations of an int3 vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The componentwise number of leading zeros of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int3 lzcnt(int3 x) { return int3(lzcnt(x.x), lzcnt(x.y), lzcnt(x.z)); }
+
+        /// <summary>Returns the componentwise number of leading zeros in the binary representations of an int4 vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The componentwise number of leading zeros of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int4 lzcnt(int4 x) { return int4(lzcnt(x.x), lzcnt(x.y), lzcnt(x.z), lzcnt(x.w)); }
+
+
+        /// <summary>Returns number of leading zeros in the binary representations of a uint value.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The number of leading zeros of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int lzcnt(uint x)
+        {
+            if (x == 0)
+                return 32;
+            LongDoubleUnion u;
+            u.doubleValue = 0;
+            u.longValue = 0x4330000000000000L + x;
+            u.doubleValue -= 4503599627370496.0;
+            return 0x41E - (int)(u.longValue >> 52);
+        }
+
+        /// <summary>Returns the componentwise number of leading zeros in the binary representations of a uint2 vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The componentwise number of leading zeros of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int2 lzcnt(uint2 x) { return int2(lzcnt(x.x), lzcnt(x.y)); }
+
+        /// <summary>Returns the componentwise number of leading zeros in the binary representations of a uint3 vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The componentwise number of leading zeros of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int3 lzcnt(uint3 x) { return int3(lzcnt(x.x), lzcnt(x.y), lzcnt(x.z)); }
+
+        /// <summary>Returns the componentwise number of leading zeros in the binary representations of a uint4 vector.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The componentwise number of leading zeros of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int4 lzcnt(uint4 x) { return int4(lzcnt(x.x), lzcnt(x.y), lzcnt(x.z), lzcnt(x.w)); }
+
+
+        /// <summary>Returns number of leading zeros in the binary representations of a long value.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The number of leading zeros of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int lzcnt(long x) { return lzcnt((ulong)x); }
+
+
+        /// <summary>Returns number of leading zeros in the binary representations of a ulong value.</summary>
+        /// <param name="x">Input value.</param>
+        /// <returns>The number of leading zeros of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int lzcnt(ulong x)
+        {
+            if (x == 0)
+                return 64;
+
+            uint xh = (uint)(x >> 32);
+            uint bits = xh != 0 ? xh : (uint)x;
+            int offset = xh != 0 ? 0x41E : 0x43E;
+
+            LongDoubleUnion u;
+            u.doubleValue = 0;
+            u.longValue = 0x4330000000000000L + bits;
+            u.doubleValue -= 4503599627370496.0;
+            return offset - (int)(u.longValue >> 52);
+        }
+
+        /// <summary>
+        /// Computes the trailing zero count in the binary representation of the input value.
+        /// </summary>
+        /// <remarks>
+        /// Assuming that the least significant bit is on the right, the integer value 4 has a binary representation
+        /// 0100 and the trailing zero count is two. The integer value 1 has a binary representation 0001 and the
+        /// trailing zero count is zero.
+        /// </remarks>
+        /// <param name="x">Input to use when computing the trailing zero count.</param>
+        /// <returns>Returns the trailing zero count of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int tzcnt(int x) { return tzcnt((uint)x); }
+
+        /// <summary>
+        /// Computes the component-wise trailing zero count in the binary representation of the input value.
+        /// </summary>
+        /// <remarks>
+        /// Assuming that the least significant bit is on the right, the integer value 4 has a binary representation
+        /// 0100 and the trailing zero count is two. The integer value 1 has a binary representation 0001 and the
+        /// trailing zero count is zero.
+        /// </remarks>
+        /// <param name="x">Input to use when computing the trailing zero count.</param>
+        /// <returns>Returns the component-wise trailing zero count of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int2 tzcnt(int2 x) { return int2(tzcnt(x.x), tzcnt(x.y)); }
+
+        /// <summary>
+        /// Computes the component-wise trailing zero count in the binary representation of the input value.
+        /// </summary>
+        /// <remarks>
+        /// Assuming that the least significant bit is on the right, the integer value 4 has a binary representation
+        /// 0100 and the trailing zero count is two. The integer value 1 has a binary representation 0001 and the
+        /// trailing zero count is zero.
+        /// </remarks>
+        /// <param name="x">Input to use when computing the trailing zero count.</param>
+        /// <returns>Returns the component-wise trailing zero count of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int3 tzcnt(int3 x) { return int3(tzcnt(x.x), tzcnt(x.y), tzcnt(x.z)); }
+
+        /// <summary>
+        /// Computes the component-wise trailing zero count in the binary representation of the input value.
+        /// </summary>
+        /// <remarks>
+        /// Assuming that the least significant bit is on the right, the integer value 4 has a binary representation
+        /// 0100 and the trailing zero count is two. The integer value 1 has a binary representation 0001 and the
+        /// trailing zero count is zero.
+        /// </remarks>
+        /// <param name="x">Input to use when computing the trailing zero count.</param>
+        /// <returns>Returns the component-wise trailing zero count of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int4 tzcnt(int4 x) { return int4(tzcnt(x.x), tzcnt(x.y), tzcnt(x.z), tzcnt(x.w)); }
+
+
+        /// <summary>
+        /// Computes the trailing zero count in the binary representation of the input value.
+        /// </summary>
+        /// <remarks>
+        /// Assuming that the least significant bit is on the right, the integer value 4 has a binary representation
+        /// 0100 and the trailing zero count is two. The integer value 1 has a binary representation 0001 and the
+        /// trailing zero count is zero.
+        /// </remarks>
+        /// <param name="x">Input to use when computing the trailing zero count.</param>
+        /// <returns>Returns the trailing zero count of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int tzcnt(uint x)
+        {
+            if (x == 0)
+                return 32;
+
+            x &= (uint)-x;
+            LongDoubleUnion u;
+            u.doubleValue = 0;
+            u.longValue = 0x4330000000000000L + x;
+            u.doubleValue -= 4503599627370496.0;
+            return (int)(u.longValue >> 52) - 0x3FF;
+        }
+
+        /// <summary>
+        /// Computes the component-wise trailing zero count in the binary representation of the input value.
+        /// </summary>
+        /// <remarks>
+        /// Assuming that the least significant bit is on the right, the integer value 4 has a binary representation
+        /// 0100 and the trailing zero count is two. The integer value 1 has a binary representation 0001 and the
+        /// trailing zero count is zero.
+        /// </remarks>
+        /// <param name="x">Input to use when computing the trailing zero count.</param>
+        /// <returns>Returns the component-wise trailing zero count of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int2 tzcnt(uint2 x) { return int2(tzcnt(x.x), tzcnt(x.y)); }
+
+        /// <summary>
+        /// Computes the component-wise trailing zero count in the binary representation of the input value.
+        /// </summary>
+        /// <remarks>
+        /// Assuming that the least significant bit is on the right, the integer value 4 has a binary representation
+        /// 0100 and the trailing zero count is two. The integer value 1 has a binary representation 0001 and the
+        /// trailing zero count is zero.
+        /// </remarks>
+        /// <param name="x">Input to use when computing the trailing zero count.</param>
+        /// <returns>Returns the component-wise trailing zero count of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int3 tzcnt(uint3 x) { return int3(tzcnt(x.x), tzcnt(x.y), tzcnt(x.z)); }
+
+        /// <summary>
+        /// Computes the component-wise trailing zero count in the binary representation of the input value.
+        /// </summary>
+        /// <remarks>
+        /// Assuming that the least significant bit is on the right, the integer value 4 has a binary representation
+        /// 0100 and the trailing zero count is two. The integer value 1 has a binary representation 0001 and the
+        /// trailing zero count is zero.
+        /// </remarks>
+        /// <param name="x">Input to use when computing the trailing zero count.</param>
+        /// <returns>Returns the component-wise trailing zero count of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int4 tzcnt(uint4 x) { return int4(tzcnt(x.x), tzcnt(x.y), tzcnt(x.z), tzcnt(x.w)); }
+
+        /// <summary>
+        /// Computes the trailing zero count in the binary representation of the input value.
+        /// </summary>
+        /// <remarks>
+        /// Assuming that the least significant bit is on the right, the integer value 4 has a binary representation
+        /// 0100 and the trailing zero count is two. The integer value 1 has a binary representation 0001 and the
+        /// trailing zero count is zero.
+        /// </remarks>
+        /// <param name="x">Input to use when computing the trailing zero count.</param>
+        /// <returns>Returns the trailing zero count of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int tzcnt(long x) { return tzcnt((ulong)x); }
+
+        /// <summary>
+        /// Computes the trailing zero count in the binary representation of the input value.
+        /// </summary>
+        /// <remarks>
+        /// Assuming that the least significant bit is on the right, the integer value 4 has a binary representation
+        /// 0100 and the trailing zero count is two. The integer value 1 has a binary representation 0001 and the
+        /// trailing zero count is zero.
+        /// </remarks>
+        /// <param name="x">Input to use when computing the trailing zero count.</param>
+        /// <returns>Returns the trailing zero count of the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int tzcnt(ulong x)
+        {
+            if (x == 0)
+                return 64;
+
+            x = x & (ulong)-(long)x;
+            uint xl = (uint)x;
+
+            uint bits = xl != 0 ? xl : (uint)(x >> 32);
+            int offset = xl != 0 ? 0x3FF : 0x3DF;
+
+            LongDoubleUnion u;
+            u.doubleValue = 0;
+            u.longValue = 0x4330000000000000L + bits;
+            u.doubleValue -= 4503599627370496.0;
+            return (int)(u.longValue >> 52) - offset;
+        }
+
+
 
         /// <summary>Returns the result of performing a reversal of the bit pattern of an int value.</summary>
         /// <param name="x">Value to reverse.</param>
@@ -4943,104 +5455,312 @@
             return x + 1;
         }
 
+        /// <summary>
+        /// Computes the ceiling of the base-2 logarithm of x.
+        /// </summary>
+        /// <remarks>
+        /// x must be greater than 0, otherwise the result is undefined.
+        /// </remarks>
+        /// <param name="x">Integer to be used as input.</param>
+        /// <returns>Ceiling of the base-2 logarithm of x, as an integer.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int ceillog2(int x)
+        {
+            return 32 - lzcnt((uint)x - 1);
+        }
+
+        /// <summary>
+        /// Computes the componentwise ceiling of the base-2 logarithm of x.
+        /// </summary>
+        /// <remarks>
+        /// Components of x must be greater than 0, otherwise the result for that component is undefined.
+        /// </remarks>
+        /// <param name="x">int2 to be used as input.</param>
+        /// <returns>Componentwise ceiling of the base-2 logarithm of x.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int2 ceillog2(int2 x)
+        {
+            return new int2(ceillog2(x.x), ceillog2(x.y));
+        }
+
+        /// <summary>
+        /// Computes the componentwise ceiling of the base-2 logarithm of x.
+        /// </summary>
+        /// <remarks>
+        /// Components of x must be greater than 0, otherwise the result for that component is undefined.
+        /// </remarks>
+        /// <param name="x">int3 to be used as input.</param>
+        /// <returns>Componentwise ceiling of the base-2 logarithm of x.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int3 ceillog2(int3 x)
+        {
+            return new int3(ceillog2(x.x), ceillog2(x.y), ceillog2(x.z));
+        }
+
+        /// <summary>
+        /// Computes the componentwise ceiling of the base-2 logarithm of x.
+        /// </summary>
+        /// <remarks>
+        /// Components of x must be greater than 0, otherwise the result for that component is undefined.
+        /// </remarks>
+        /// <param name="x">int4 to be used as input.</param>
+        /// <returns>Componentwise ceiling of the base-2 logarithm of x.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int4 ceillog2(int4 x)
+        {
+            return new int4(ceillog2(x.x), ceillog2(x.y), ceillog2(x.z), ceillog2(x.w));
+        }
+
+        /// <summary>
+        /// Computes the ceiling of the base-2 logarithm of x.
+        /// </summary>
+        /// <remarks>
+        /// x must be greater than 0, otherwise the result is undefined.
+        /// </remarks>
+        /// <param name="x">Unsigned integer to be used as input.</param>
+        /// <returns>Ceiling of the base-2 logarithm of x, as an integer.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int ceillog2(uint x)
+        {
+            return 32 - lzcnt(x - 1);
+        }
+
+        /// <summary>
+        /// Computes the componentwise ceiling of the base-2 logarithm of x.
+        /// </summary>
+        /// <remarks>
+        /// Components of x must be greater than 0, otherwise the result for that component is undefined.
+        /// </remarks>
+        /// <param name="x">uint2 to be used as input.</param>
+        /// <returns>Componentwise ceiling of the base-2 logarithm of x.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int2 ceillog2(uint2 x)
+        {
+            return new int2(ceillog2(x.x), ceillog2(x.y));
+        }
+
+        /// <summary>
+        /// Computes the componentwise ceiling of the base-2 logarithm of x.
+        /// </summary>
+        /// <remarks>
+        /// Components of x must be greater than 0, otherwise the result for that component is undefined.
+        /// </remarks>
+        /// <param name="x">uint3 to be used as input.</param>
+        /// <returns>Componentwise ceiling of the base-2 logarithm of x.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int3 ceillog2(uint3 x)
+        {
+            return new int3(ceillog2(x.x), ceillog2(x.y), ceillog2(x.z));
+        }
+
+        /// <summary>
+        /// Computes the componentwise ceiling of the base-2 logarithm of x.
+        /// </summary>
+        /// <remarks>
+        /// Components of x must be greater than 0, otherwise the result for that component is undefined.
+        /// </remarks>
+        /// <param name="x">uint4 to be used as input.</param>
+        /// <returns>Componentwise ceiling of the base-2 logarithm of x.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int4 ceillog2(uint4 x)
+        {
+            return new int4(ceillog2(x.x), ceillog2(x.y), ceillog2(x.z), ceillog2(x.w));
+        }
+
+        /// <summary>
+        /// Computes the floor of the base-2 logarithm of x.
+        /// </summary>
+        /// <remarks>x must be greater than zero, otherwise the result is undefined.</remarks>
+        /// <param name="x">Integer to be used as input.</param>
+        /// <returns>Floor of base-2 logarithm of x.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int floorlog2(int x)
+        {
+            return 31 - lzcnt((uint)x);
+        }
+
+        /// <summary>
+        /// Computes the componentwise floor of the base-2 logarithm of x.
+        /// </summary>
+        /// <remarks>Components of x must be greater than zero, otherwise the result of the component is undefined.</remarks>
+        /// <param name="x">int2 to be used as input.</param>
+        /// <returns>Componentwise floor of base-2 logarithm of x.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int2 floorlog2(int2 x)
+        {
+            return new int2(floorlog2(x.x), floorlog2(x.y));
+        }
+
+        /// <summary>
+        /// Computes the componentwise floor of the base-2 logarithm of x.
+        /// </summary>
+        /// <remarks>Components of x must be greater than zero, otherwise the result of the component is undefined.</remarks>
+        /// <param name="x">int3 to be used as input.</param>
+        /// <returns>Componentwise floor of base-2 logarithm of x.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int3 floorlog2(int3 x)
+        {
+            return new int3(floorlog2(x.x), floorlog2(x.y), floorlog2(x.z));
+        }
+
+        /// <summary>
+        /// Computes the componentwise floor of the base-2 logarithm of x.
+        /// </summary>
+        /// <remarks>Components of x must be greater than zero, otherwise the result of the component is undefined.</remarks>
+        /// <param name="x">int4 to be used as input.</param>
+        /// <returns>Componentwise floor of base-2 logarithm of x.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int4 floorlog2(int4 x)
+        {
+            return new int4(floorlog2(x.x), floorlog2(x.y), floorlog2(x.z), floorlog2(x.w));
+        }
+
+        /// <summary>
+        /// Computes the floor of the base-2 logarithm of x.
+        /// </summary>
+        /// <remarks>x must be greater than zero, otherwise the result is undefined.</remarks>
+        /// <param name="x">Unsigned integer to be used as input.</param>
+        /// <returns>Floor of base-2 logarithm of x.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int floorlog2(uint x)
+        {
+            return 31 - lzcnt(x);
+        }
+
+        /// <summary>
+        /// Computes the componentwise floor of the base-2 logarithm of x.
+        /// </summary>
+        /// <remarks>Components of x must be greater than zero, otherwise the result of the component is undefined.</remarks>
+        /// <param name="x">uint2 to be used as input.</param>
+        /// <returns>Componentwise floor of base-2 logarithm of x.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int2 floorlog2(uint2 x)
+        {
+            return new int2(floorlog2(x.x), floorlog2(x.y));
+        }
+
+        /// <summary>
+        /// Computes the componentwise floor of the base-2 logarithm of x.
+        /// </summary>
+        /// <remarks>Components of x must be greater than zero, otherwise the result of the component is undefined.</remarks>
+        /// <param name="x">uint3 to be used as input.</param>
+        /// <returns>Componentwise floor of base-2 logarithm of x.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int3 floorlog2(uint3 x)
+        {
+            return new int3(floorlog2(x.x), floorlog2(x.y), floorlog2(x.z));
+        }
+
+        /// <summary>
+        /// Computes the componentwise floor of the base-2 logarithm of x.
+        /// </summary>
+        /// <remarks>Components of x must be greater than zero, otherwise the result of the component is undefined.</remarks>
+        /// <param name="x">uint4 to be used as input.</param>
+        /// <returns>Componentwise floor of base-2 logarithm of x.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int4 floorlog2(uint4 x)
+        {
+            return new int4(floorlog2(x.x), floorlog2(x.y), floorlog2(x.z), floorlog2(x.w));
+        }
+
         /// <summary>Returns the result of converting a Single value from degrees to radians.</summary>
         /// <param name="x">Angle in degrees.</param>
         /// <returns>Angle converted to radians.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single radians(Single x) { return x * Math.Deg2Rad; }
+        public static Single radians(Single x) { return x * 0.0174532925f; }
 
         /// <summary>Returns the result of a componentwise conversion of a float2 vector from degrees to radians.</summary>
         /// <param name="x">Vector containing angles in degrees.</param>
         /// <returns>Vector containing angles converted to radians.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float2 radians(float2 x) { return x * Math.Deg2Rad; }
+        public static float2 radians(float2 x) { return x * 0.0174532925f; }
 
         /// <summary>Returns the result of a componentwise conversion of a float3 vector from degrees to radians.</summary>
         /// <param name="x">Vector containing angles in degrees.</param>
         /// <returns>Vector containing angles converted to radians.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float3 radians(float3 x) { return x * Math.Deg2Rad; }
+        public static float3 radians(float3 x) { return x * 0.0174532925f; }
 
         /// <summary>Returns the result of a componentwise conversion of a float4 vector from degrees to radians.</summary>
         /// <param name="x">Vector containing angles in degrees.</param>
         /// <returns>Vector containing angles converted to radians.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float4 radians(float4 x) { return x * Math.Deg2Rad; }
+        public static float4 radians(float4 x) { return x * 0.0174532925f; }
 
 
         /// <summary>Returns the result of converting a Single value from degrees to radians.</summary>
         /// <param name="x">Angle in degrees.</param>
         /// <returns>Angle converted to radians.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double radians(Double x) { return x * Math.Deg2RadDouble; }
+        public static Double radians(Double x) { return x * 0.017453292519943296; }
 
         /// <summary>Returns the result of a componentwise conversion of a float2 vector from degrees to radians.</summary>
         /// <param name="x">Vector containing angles in degrees.</param>
         /// <returns>Vector containing angles converted to radians.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double2 radians(double2 x) { return x * Math.Deg2RadDouble; }
+        public static double2 radians(double2 x) { return x * 0.017453292519943296; }
 
         /// <summary>Returns the result of a componentwise conversion of a float3 vector from degrees to radians.</summary>
         /// <param name="x">Vector containing angles in degrees.</param>
         /// <returns>Vector containing angles converted to radians.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double3 radians(double3 x) { return x * Math.Deg2RadDouble; }
+        public static double3 radians(double3 x) { return x * 0.017453292519943296; }
 
         /// <summary>Returns the result of a componentwise conversion of a float4 vector from degrees to radians.</summary>
         /// <param name="x">Vector containing angles in degrees.</param>
         /// <returns>Vector containing angles converted to radians.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double4 radians(double4 x) { return x * Math.Deg2RadDouble; }
+        public static double4 radians(double4 x) { return x * 0.017453292519943296; }
 
 
         /// <summary>Returns the result of converting a Double value from radians to degrees.</summary>
         /// <param name="x">Angle in radians.</param>
         /// <returns>Angle converted to degrees.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single degrees(Single x) { return x * Math.Rad2Deg; }
+        public static Single degrees(Single x) { return x * 57.295779513f; }
 
         /// <summary>Returns the result of a componentwise conversion of a double2 vector from radians to degrees.</summary>
         /// <param name="x">Vector containing angles in radians.</param>
         /// <returns>Vector containing angles converted to degrees.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float2 degrees(float2 x) { return x * Math.Rad2Deg; }
+        public static float2 degrees(float2 x) { return x * 57.295779513f; }
 
         /// <summary>Returns the result of a componentwise conversion of a double3 vector from radians to degrees.</summary>
         /// <param name="x">Vector containing angles in radians.</param>
         /// <returns>Vector containing angles converted to degrees.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float3 degrees(float3 x) { return x * Math.Rad2Deg; }
+        public static float3 degrees(float3 x) { return x * 57.295779513f; }
 
         /// <summary>Returns the result of a componentwise conversion of a double4 vector from radians to degrees.</summary>
         /// <param name="x">Vector containing angles in radians.</param>
         /// <returns>Vector containing angles converted to degrees.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float4 degrees(float4 x) { return x * Math.Rad2Deg; }
+        public static float4 degrees(float4 x) { return x * 57.295779513f; }
 
 
         /// <summary>Returns the result of converting a Double value from radians to degrees.</summary>
         /// <param name="x">Angle in radians.</param>
         /// <returns>Angle converted to degrees.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double degrees(Double x) { return x * Math.Rad2DegDouble; }
+        public static Double degrees(Double x) { return x * 57.29577951308232; }
 
         /// <summary>Returns the result of a componentwise conversion of a double2 vector from radians to degrees.</summary>
         /// <param name="x">Vector containing angles in radians.</param>
         /// <returns>Vector containing angles converted to degrees.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double2 degrees(double2 x) { return x * Math.Rad2DegDouble; }
+        public static double2 degrees(double2 x) { return x * 57.29577951308232; }
 
         /// <summary>Returns the result of a componentwise conversion of a double3 vector from radians to degrees.</summary>
         /// <param name="x">Vector containing angles in radians.</param>
         /// <returns>Vector containing values converted to degrees.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double3 degrees(double3 x) { return x * Math.Rad2DegDouble; }
+        public static double3 degrees(double3 x) { return x * 57.29577951308232; }
 
         /// <summary>Returns the result of a componentwise conversion of a double4 vector from radians to degrees.</summary>
         /// <param name="x">Vector containing angles in radians.</param>
         /// <returns>Vector containing angles converted to degrees.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double4 degrees(double4 x) { return x * Math.Rad2DegDouble; }
+        public static double4 degrees(double4 x) { return x * 57.29577951308232; }
 
 
         /// <summary>Returns the minimum component of an int2 vector.</summary>
@@ -5338,6 +6058,135 @@
         {
             return compress((int*)output, index, *(int4*)&val, mask);
         }
+
+        /// <summary>Returns the floating point representation of a half-precision floating point value.</summary>
+        /// <param name="x">The half precision Single.</param>
+        /// <returns>The single precision Single representation of the half precision Single.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single f16tof32(uint x)
+        {
+            const uint shifted_exp = (0x7c00 << 13);
+            uint uf = (x & 0x7fff) << 13;
+            uint e = uf & shifted_exp;
+            uf += (127 - 15) << 23;
+            uf += select(0, (128u - 16u) << 23, e == shifted_exp);
+            uf = select(uf, asuint(asfloat(uf + (1 << 23)) - 6.10351563e-05f), e == 0);
+            uf |= (x & 0x8000) << 16;
+            return asfloat(uf);
+        }
+
+        /// <summary>Returns the floating point representation of a half-precision floating point vector.</summary>
+        /// <param name="x">The half precision Single vector.</param>
+        /// <returns>The single precision Single vector representation of the half precision Single vector.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float2 f16tof32(uint2 x)
+        {
+            const uint shifted_exp = (0x7c00 << 13);
+            uint2 uf = (x & 0x7fff) << 13;
+            uint2 e = uf & shifted_exp;
+            uf += (127 - 15) << 23;
+            uf += select(0, (128u - 16u) << 23, e == shifted_exp);
+            uf = select(uf, asuint(asfloat(uf + (1 << 23)) - 6.10351563e-05f), e == 0);
+            uf |= (x & 0x8000) << 16;
+            return asfloat(uf);
+        }
+
+        /// <summary>Returns the floating point representation of a half-precision floating point vector.</summary>
+        /// <param name="x">The half precision Single vector.</param>
+        /// <returns>The single precision Single vector representation of the half precision Single vector.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float3 f16tof32(uint3 x)
+        {
+            const uint shifted_exp = (0x7c00 << 13);
+            uint3 uf = (x & 0x7fff) << 13;
+            uint3 e = uf & shifted_exp;
+            uf += (127 - 15) << 23;
+            uf += select(0, (128u - 16u) << 23, e == shifted_exp);
+            uf = select(uf, asuint(asfloat(uf + (1 << 23)) - 6.10351563e-05f), e == 0);
+            uf |= (x & 0x8000) << 16;
+            return asfloat(uf);
+        }
+
+        /// <summary>Returns the floating point representation of a half-precision floating point vector.</summary>
+        /// <param name="x">The half precision Single vector.</param>
+        /// <returns>The single precision Single vector representation of the half precision Single vector.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float4 f16tof32(uint4 x)
+        {
+            const uint shifted_exp = (0x7c00 << 13);
+            uint4 uf = (x & 0x7fff) << 13;
+            uint4 e = uf & shifted_exp;
+            uf += (127 - 15) << 23;
+            uf += select(0, (128u - 16u) << 23, e == shifted_exp);
+            uf = select(uf, asuint(asfloat(uf + (1 << 23)) - 6.10351563e-05f), e == 0);
+            uf |= (x & 0x8000) << 16;
+            return asfloat(uf);
+        }
+
+        /// <summary>Returns the result converting a Single value to its nearest half-precision floating point representation.</summary>
+        /// <param name="x">The single precision Single.</param>
+        /// <returns>The half precision Single representation of the single precision Single.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static uint f32tof16(Single x)
+        {
+            const int infinity_32 = 255 << 23;
+            const uint msk = 0x7FFFF000u;
+
+            uint ux = asuint(x);
+            uint uux = ux & msk;
+            uint h = (uint)(asuint(min(asfloat(uux) * 1.92592994e-34f, 260042752.0f)) + 0x1000) >> 13;   // Clamp to signed infinity if overflowed
+            h = select(h, select(0x7c00u, 0x7e00u, (int)uux > infinity_32), (int)uux >= infinity_32);   // NaN->qNaN and Inf->Inf
+            return h | (ux & ~msk) >> 16;
+        }
+
+        /// <summary>Returns the result of a componentwise conversion of a float2 vector to its nearest half-precision floating point representation.</summary>
+        /// <param name="x">The single precision Single vector.</param>
+        /// <returns>The half precision Single vector representation of the single precision Single vector.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static uint2 f32tof16(float2 x)
+        {
+            const int infinity_32 = 255 << 23;
+            const uint msk = 0x7FFFF000u;
+
+            uint2 ux = asuint(x);
+            uint2 uux = ux & msk;
+            uint2 h = (uint2)(asint(min(asfloat(uux) * 1.92592994e-34f, 260042752.0f)) + 0x1000) >> 13;   // Clamp to signed infinity if overflowed
+            h = select(h, select(0x7c00u, 0x7e00u, (int2)uux > infinity_32), (int2)uux >= infinity_32);   // NaN->qNaN and Inf->Inf
+            return h | (ux & ~msk) >> 16;
+        }
+
+        /// <summary>Returns the result of a componentwise conversion of a float3 vector to its nearest half-precision floating point representation.</summary>
+        /// <param name="x">The single precision Single vector.</param>
+        /// <returns>The half precision Single vector representation of the single precision Single vector.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static uint3 f32tof16(float3 x)
+        {
+            const int infinity_32 = 255 << 23;
+            const uint msk = 0x7FFFF000u;
+
+            uint3 ux = asuint(x);
+            uint3 uux = ux & msk;
+            uint3 h = (uint3)(asint(min(asfloat(uux) * 1.92592994e-34f, 260042752.0f)) + 0x1000) >> 13;   // Clamp to signed infinity if overflowed
+            h = select(h, select(0x7c00u, 0x7e00u, (int3)uux > infinity_32), (int3)uux >= infinity_32);   // NaN->qNaN and Inf->Inf
+            return h | (ux & ~msk) >> 16;
+        }
+
+        /// <summary>Returns the result of a componentwise conversion of a float4 vector to its nearest half-precision floating point representation.</summary>
+        /// <param name="x">The single precision Single vector.</param>
+        /// <returns>The half precision Single vector representation of the single precision Single vector.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static uint4 f32tof16(float4 x)
+        {
+            const int infinity_32 = 255 << 23;
+            const uint msk = 0x7FFFF000u;
+
+            uint4 ux = asuint(x);
+            uint4 uux = ux & msk;
+            uint4 h = (uint4)(asint(min(asfloat(uux) * 1.92592994e-34f, 260042752.0f)) + 0x1000) >> 13;   // Clamp to signed infinity if overflowed
+            h = select(h, select(0x7c00u, 0x7e00u, (int4)uux > infinity_32), (int4)uux >= infinity_32);   // NaN->qNaN and Inf->Inf
+            return h | (ux & ~msk) >> 16;
+        }
+
 
         /// <summary>Returns a uint hash from a block of memory using the xxhash32 algorithm. Can only be used in an unsafe context.</summary>
         /// <param name="pBuffer">A pointer to the beginning of the data.</param>

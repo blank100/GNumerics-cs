@@ -1,6 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
-
+using Unity.IL2CPP.CompilerServices;
 using static SeaWar.Mathematics.math;
 
 namespace SeaWar.Mathematics
@@ -8,7 +8,7 @@ namespace SeaWar.Mathematics
     /// <summary>
     /// A quaternion type for representing rotations.
     /// </summary>
-
+    [Il2CppEagerStaticClassConstruction]
     [Serializable]
     public partial struct quaternion : System.IEquatable<quaternion>, IFormattable
     {
