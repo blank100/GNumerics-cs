@@ -44,13 +44,6 @@ namespace SeaWar.Mathematics {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Set(Single newX, Single newY, Single newZ) {
-            x = newX;
-            y = newY;
-            z = newZ;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 Lerp(Vector3 a, Vector3 b, Single t) {
             t = Math.Clamp(t, 0, 1);
             return new(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, a.z + (b.z - a.z) * t);
@@ -197,13 +190,6 @@ namespace SeaWar.Mathematics {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 Scale(Vector3 a, Vector3 b) => new(a.x * b.x, a.y * b.y, a.z * b.z);
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Scale(Vector3 scale) {
-            x *= scale.x;
-            y *= scale.y;
-            z *= scale.z;
-        }
-
         public Vector3 Normalized {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get {
@@ -272,6 +258,16 @@ namespace SeaWar.Mathematics {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single SignedAngle(Vector3 from, Vector3 to, Vector3 axis) {
             var angle = Angle(from, to);
+            var n1 = from.y * to.z - from.z * to.y;
+            var n2 = from.z * to.x - from.x * to.z;
+            var n3 = from.x * to.y - from.y * to.x;
+            Single num5 = Math.Sign(axis.x * n1 + axis.y * n2 + axis.z * n3);
+            return angle * num5;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single FastSignedAngle(Vector3 from, Vector3 to, Vector3 axis) {
+            var angle = FastAngle(from, to);
             var n1 = from.y * to.z - from.z * to.y;
             var n2 = from.z * to.x - from.x * to.z;
             var n3 = from.x * to.y - from.y * to.x;
