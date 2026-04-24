@@ -13,18 +13,29 @@ namespace Gal.Core {
         private const long TwoRawValue = OneRawValue << 1;
         private const long HalfOneRawValue = OneRawValue >> 1;
 
-        /// <summary>
         /// 整数部分掩码
-        /// </summary>
         public const ulong INTEGER_PART_MASK = ulong.MaxValue >> FRACTION_BITS << FRACTION_BITS;
 
-        /// <summary>
         /// 小数部分掩码
-        /// </summary>
         public const ulong FRACTIONAL_PART_MASK = ~INTEGER_PART_MASK;
 
-        public static readonly Fixed40_24 Precision = new(1L);
-        public static readonly int FractionalDigits = (int)Math.Log10(OneRawValue) + 1;
+        /// 最小单位
+        public static readonly Fixed40_24 Precision = new(1);
+
+        /// 机器epsilon（用于极限判断）
+        public static readonly Fixed40_24 Epsilon = new(1 << 6);
+
+        /// 常规几何判断
+        public static readonly Fixed40_24 Tolerance = new(1L << 8);
+
+        /// 更宽松（比如接触稳定）
+        public static readonly Fixed40_24 LooseTolerance = new(1L << 10);
+
+        /// 非常严格（例如归一化）
+        public static readonly Fixed40_24 TightTolerance = new(1L << 6);
+
+        /// 支持的小数位数
+        public static readonly int FractionalDigits = (int)Math.Log10(OneRawValue);
         public static readonly string StringFormat = "0." + new string('#', FractionalDigits);
         public static readonly Fixed40_24 Zero = new(0L);
         public static readonly Fixed40_24 One = new(OneRawValue);
@@ -32,17 +43,24 @@ namespace Gal.Core {
         public static readonly Fixed40_24 HalfOne = new(HalfOneRawValue);
         public static readonly Fixed40_24 MaxValue = new(long.MaxValue);
         public static readonly Fixed40_24 MinValue = new(long.MinValue);
-        public static readonly Fixed40_24 Epsilon = new(1L << (FRACTION_BITS >> 1));
-        public static readonly Fixed40_24 EpsilonSqr = Epsilon * Epsilon;
 
         /// 3.14159265358979323846
         public static readonly Fixed40_24 PI = new(52707179); //3.1415926814079285
 
-        public static readonly Fixed40_24 TwoPI = PI * 2;
-        public static readonly Fixed40_24 PIOver2 = PI / 2;
-        public static readonly Fixed40_24 PIOver3 = PI / 3;
-        public static readonly Fixed40_24 PIOver4 = PI / 4;
-        public static readonly Fixed40_24 PIOver6 = PI / 6;
+        /// PI * 2
+        public static readonly Fixed40_24 TwoPI = new(PI._raw << 1);
+
+        /// PI / 2
+        public static readonly Fixed40_24 PIOver2 = new(PI._raw >> 1);
+
+        /// PI / 3
+        public static readonly Fixed40_24 PIOver3 = new(PI._raw / 3);
+
+        /// PI / 4
+        public static readonly Fixed40_24 PIOver4 = new(PI._raw >> 2);
+
+        /// PI / 6
+        public static readonly Fixed40_24 PIOver6 = new(PI._raw / 6);
 
         /// Natural logarithm of 2<br/>
         /// 0.6931471805599453D
@@ -50,6 +68,8 @@ namespace Gal.Core {
 
         // 1/LN2
         public static readonly Fixed40_24 InvLn2 = 1 / LN2;
+
+        public static readonly Fixed40_24 InvLog2_10 = 1 / Log2(10);
 
         /// Asin Padé approximations<br/>
         /// 0.183320102085006D
@@ -60,10 +80,10 @@ namespace Gal.Core {
         public static readonly Fixed40_24 SPadeA2 = new(367092); //0.021880388259887695;
 
         private const long _log2MinRawValue = -64L * OneRawValue;
-        public static readonly Fixed40_24 LOG2Min = new(_log2MinRawValue);
+        public static readonly Fixed40_24 Log2Min = new(_log2MinRawValue);
 
         private const long _log2MaxRawValue = 63L * OneRawValue;
-        public static readonly Fixed40_24 LOG2Max = new(_log2MaxRawValue);
+        public static readonly Fixed40_24 Log2Max = new(_log2MaxRawValue);
 
         /// <summary>
         /// Degrees to radians conversion factor
@@ -86,6 +106,16 @@ namespace Gal.Core {
 
         /// 0.00019588856957852840423583984375D; // 1/7!
         public static readonly Fixed40_24 SSinCoeff7 = new(3286); //0.0001958608627319336;
+
+        // --- Padé 近似系数 ---
+        // C1 = 1/2 = 0.5
+        // private static readonly Fixed40_24 PadeC1 = new(8388608);
+
+        // C2 = 1/10 = 0.1
+        private static readonly Fixed40_24 PadeC2 = new(1677722);
+
+        // C3 = 1/120 = 0.00833333...
+        private static readonly Fixed40_24 PadeC3 = new(139810);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fixed40_24 FromRaw(long rawValue) => new(rawValue);
@@ -192,11 +222,14 @@ namespace Gal.Core {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fixed40_24 operator *(Fixed40_24 a, int b) => new(Fixed64Utils.FastMul(a._raw, (long)b << FRACTION_BITS, FRACTION_BITS, FRACTIONAL_PART_MASK));
 
+        /// 有越界风险,当值很小时可以使用
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fixed40_24 FastMul(Fixed40_24 a, int b) => new(a._raw * b);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fixed40_24 operator *(int a, Fixed40_24 b) => new(Fixed64Utils.FastMul((long)a << FRACTION_BITS, b._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
-
+        /// 有越界风险,当值很小时可以使用
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fixed40_24 FastMul(int a, Fixed40_24 b) => new(a * b._raw);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -321,7 +354,7 @@ namespace Gal.Core {
         public static Fixed40_24 Clamp(Fixed40_24 value, Fixed40_24 min, Fixed40_24 max) => value._raw < min._raw ? min : value._raw > max._raw ? max : value;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Clamp01(Fixed40_24 value) => value._raw < Zero._raw ? Zero : value._raw > One._raw ? One : value;
+        public static Fixed40_24 Clamp01(Fixed40_24 value) => value._raw < Zero._raw ? Zero : value._raw > OneRawValue ? One : value;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fixed40_24 Min(Fixed40_24 a, Fixed40_24 b) => a._raw <= b._raw ? a : b;
@@ -346,53 +379,41 @@ namespace Gal.Core {
         public static Fixed40_24 Pow2(Fixed40_24 x) =>
             new(Fixed64Utils.Pow2(x._raw, OneRawValue, FRACTION_BITS, INTEGER_PART_MASK, FRACTIONAL_PART_MASK, _log2MinRawValue, _log2MaxRawValue, LN2._raw));
 
-        // --- Padé 近似系数 ---
-// C1 = 1/2 = 0.5
-        private static readonly Fixed40_24 PadeC1 = new(8388608);
-// C2 = 1/10 = 0.1
-        private static readonly Fixed40_24 PadeC2 = new(1677722); 
-// C3 = 1/120 = 0.00833333...
-        private static readonly Fixed40_24 PadeC3 = new(139810);
-
         /// <summary>
         /// 基于 Padé [3/3] 近似的高精度 Exp 函数
         /// </summary>
-        public static Fixed40_24 Exp(Fixed40_24 x) {
-            if (x._raw == 0) return One;
-            if (x._raw <= _log2MinRawValue) return Zero;
-            if (x._raw >= _log2MaxRawValue) return MaxValue;
+        public static Fixed40_24 Exp(Fixed40_24 x) =>
+            new(Fixed64Utils.Exp(
+                x._raw,
+                OneRawValue,
+                HalfOneRawValue,
+                FRACTION_BITS,
+                FRACTIONAL_PART_MASK,
+                _log2MinRawValue,
+                _log2MaxRawValue,
+                LN2._raw,
+                InvLn2._raw,
+                PadeC2._raw,
+                PadeC3._raw
+            ));
 
-            // 1. 范围缩减 (与之前一致)
-            // k = round(x / ln2)
-            long k = (Fixed64Utils.FastMul(x._raw, InvLn2._raw, FRACTION_BITS, FRACTIONAL_PART_MASK) + HalfOneRawValue) >> FRACTION_BITS;
-            // r = x - k * ln2
-            Fixed40_24 r = new(x._raw - (k * LN2._raw));
-
-            // 2. Padé [3/3] 近似计算
-            // 我们计算 r^2
-            Fixed40_24 r2 = r * r;
-
-            // U = r * ( (1/120 * r^2) + 1/2 )
-            Fixed40_24 u = r * (r2 * PadeC3 + PadeC1);
-
-            // V = (1/10 * r^2) + 1
-            Fixed40_24 v = r2 * PadeC2 + One;
-
-            // e^r = (V + U) / (V - U)
-            // 注意：由于 r 范围极小 (abs < 0.346)，V-U 永远大于 0
-            Fixed40_24 er = (v + u) / (v - u);
-
-            // 3. 重组结果: er * 2^k
-            if (k == 0) return er;
-            if (k > 0) return new(er._raw << (int)k);
-            return new(er._raw >> (int)-k);
-        }
+        /// C# 和 unity 中, ln = log
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Fixed40_24 Log(Fixed40_24 x)
+            // 使用换底公式: ln(x) = log2(x) * ln(2)
+            => new(Fixed64Utils.FastMul(Log2(x)._raw, LN2._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fixed40_24 Log2(Fixed40_24 x) => new(Fixed64Utils.Log2(x._raw, OneRawValue, FRACTION_BITS, FRACTIONAL_PART_MASK));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Ln(Fixed40_24 x) => new(Fixed64Utils.FastMul(Log2(x)._raw, LN2._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
+        public static Fixed40_24 Ln(Fixed40_24 x) =>
+            new(Fixed64Utils.FastMul(Log2(x)._raw, LN2._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Fixed40_24 Log10(Fixed40_24 x)
+            // 使用换底公式: log10(x) = log2(x) * (1 / log2(10))
+            => new(Fixed64Utils.FastMul(Log2(x)._raw, InvLog2_10._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fixed40_24 Sin(Fixed40_24 x) =>
@@ -438,7 +459,7 @@ namespace Gal.Core {
             ToString(string format, IFormatProvider formatProvider) => ((double)this).ToString(format, formatProvider);
 
         public class Comparer : IComparer<Fixed40_24> {
-            public static readonly Comparer Instance = new Comparer();
+            public static readonly Comparer Instance = new ();
 
             private Comparer() {
             }

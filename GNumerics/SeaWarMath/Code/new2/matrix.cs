@@ -464,7 +464,7 @@ namespace SeaWar.Mathematics
             Single mn = min(min(forwardLengthSq, upLengthSq), tLengthSq);
             Single mx = max(max(forwardLengthSq, upLengthSq), tLengthSq);
 
-            bool accept = mn > Define.SafeMinValue && mx < Define.SafeMaxValue && isfinite(forwardLengthSq) && isfinite(upLengthSq) && isfinite(tLengthSq);
+            bool accept = mn > Define.SafeMinValue && mx < Define.SafeMaxValue;
             return float3x3(
                 select(float3(1,0,0), t, accept),
                 select(float3(0,1,0), cross(forward, t), accept),

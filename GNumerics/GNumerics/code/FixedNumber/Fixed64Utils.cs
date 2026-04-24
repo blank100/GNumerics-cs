@@ -190,6 +190,71 @@ namespace Gal.Core {
             return (long)result;
         }
 
+        /// <summary>
+        /// 基于 Padé [3/3] 近似的高精度 Exp 函数 (e^x)。
+        /// </summary>
+        /// <param name="x">输入的定点数 raw 值。</param>
+        /// <param name="one">值为 1 的 raw 值。</param>
+        /// <param name="halfOne">值为 0.5 的 raw 值。</param>
+        /// <param name="fractionBits">小数位数。</param>
+        /// <param name="fractionalPartMask">小数部分掩码。</param>
+        /// <param name="log2Min">支持的最小输入的 raw 值。</param>
+        /// <param name="log2Max">支持的最大输入的 raw 值。</param>
+        /// <param name="ln2">ln(2) 的 raw 值。</param>
+        /// <param name="invLn2">1/ln(2) 的 raw 值。</param>
+        /// <param name="padeC2">Padé 系数 C2 (1/10) 的 raw 值。</param>
+        /// <param name="padeC3">Padé 系数 C3 (1/120) 的 raw 值。</param>
+        /// <returns>e^x 的定点数 raw 值。</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static long Exp(
+            long x, long one, long halfOne, int fractionBits, ulong fractionalPartMask,
+            long log2Min, long log2Max, long ln2, long invLn2,
+            long padeC2, long padeC3
+        ) {
+            // --- 1. 边界检查 ---
+            if (x == 0) return one;
+            if (x <= log2Min) return 0;
+            if (x >= log2Max) return long.MaxValue;
+
+            // --- 2. 范围缩减: x = k * ln(2) + r, where |r| <= 0.5 * ln(2) ---
+            // k = round(x / ln2) = floor(x / ln2 + 0.5)
+            // 在定点数中，这通过乘法实现: k_raw = (x_raw * invLn2_raw) >> fractionBits
+            // 加 halfOne 是为了实现 round
+            long k = (FastMul(x, invLn2, fractionBits, fractionalPartMask) + halfOne) >> fractionBits;
+
+            // r = x - k * ln(2)
+            long r = x - (k * ln2);
+
+            // --- 3. Padé [3/3] 近似计算 e^r ---
+            // 我们计算 r^2
+            long r2 = FastMul(r, r, fractionBits, fractionalPartMask);
+
+            // U = r * ( (1/120 * r^2) + 1/2 )
+            long u_inner = FastMul(r2, padeC3, fractionBits, fractionalPartMask) + halfOne;
+            long u = FastMul(r, u_inner, fractionBits, fractionalPartMask);
+
+            // V = (1/10 * r^2) + 1
+            long v = FastMul(r2, padeC2, fractionBits, fractionalPartMask) + one;
+
+            // e^r = (V + U) / (V - U)
+            // 注意：由于 r 范围极小 (abs < 0.347)，V-U 永远大于 0
+            long er = Div(v + u, v - u, fractionBits);
+
+            // --- 4. 重组结果: e^x = e^r * 2^k ---
+            if (k == 0) return er;
+            if (k > 0) {
+                // 检查左移是否会溢出
+                if (k >= 63) return long.MaxValue;
+                // 另一个更精细的检查
+                if ((er >> (63 - (int)k)) != 0) return long.MaxValue;
+                return er << (int)k;
+            } else // k < 0
+            {
+                // 对于负数 k，右移
+                return er >> (int)-k;
+            }
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static long Log2(long v, long one, int fractionBits, ulong fractionalPartMask) {
             if (v <= 0) throw new ArgumentOutOfRangeException(nameof(v));

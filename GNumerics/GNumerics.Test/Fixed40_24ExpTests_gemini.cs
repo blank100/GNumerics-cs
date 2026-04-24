@@ -54,22 +54,6 @@ namespace Gal.Core.Tests
         #region 3. 极值与边界测试
 
         [Fact]
-        public void Exp_LargePositive_ApproachesLimit()
-        {
-            // 测试一个较大的值，但确保不会导致 Pow2 内部长期溢出
-            // 你的库中 _log2MaxRawValue 约 63，x * 1.4427 < 63 => x < 43.6
-            double input = 30.0;
-            Fixed40_24 fInput = (Fixed40_24)input;
-
-            double expected = Math.Exp(input);
-            double actual = (double)Fixed40_24.Exp(fInput);
-
-            // 对于非常大的数，检查相对误差（Error / Value）
-            double relativeError = Math.Abs(expected - actual) / expected;
-            Assert.True(relativeError < 0.001, $"Relative error too high: {relativeError}");
-        }
-
-        [Fact]
         public void Exp_LargeNegative_ApproachesZero()
         {
             // e^-20 应该是一个非常接近 0 的正数

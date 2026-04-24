@@ -182,7 +182,7 @@ public static class Math {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Single Exp2(Single v) {
 #if USE_FIXED64
-        return Single.Exp2(v);
+        return Single.Exp(v * Single.Parse("0.69314718"));
 #else
         return (Single)System.Math.Exp(v * 0.69314718f);
 #endif
@@ -191,7 +191,7 @@ public static class Math {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Double Exp2(Double v) {
 #if USE_FIXED64
-        return Double.Exp2(v);
+        return Double.Exp(v * Double.Parse("0.69314718"));
 #else
         return System.Math.Exp(v * 0.693147180559945309d);
 #endif
@@ -201,7 +201,7 @@ public static class Math {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Single Exp10(Single v) {
 #if USE_FIXED64
-        return Single.Exp10(v);
+        return Single.Exp(v * Single.Parse("2.30258509"));
 #else
         return (Single)System.Math.Exp(v * 2.30258509f);
 #endif
@@ -210,7 +210,7 @@ public static class Math {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Double Exp10(Double v) {
 #if USE_FIXED64
-        return Double.Exp10(v);
+        return Double.Exp(v * Double.Parse("2.30258509"));
 #else
         return System.Math.Exp(v * 2.302585092994045684d);
 #endif

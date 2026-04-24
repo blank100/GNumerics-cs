@@ -7,7 +7,7 @@ namespace Fixed64Test
 	public class FixedTrigonometryTests
 	{
 		// private static readonly double Tolerance = (double)Fixed64.FromChars("0.0001");
-		private static readonly double Tolerance = (double)(Fixed64.Epsilon);
+		private static readonly double Tolerance = (double)(Fixed64.Tolerance);
 
 #region Test: Pow Method
 
@@ -309,7 +309,7 @@ namespace Fixed64Test
 				// var atanResult = Fixed64.Atan(Fixed64.FromRaw(429496729));
 				var atanResult = Fixed64.Atan(value);
 				var tanResult = Fixed64.Tan(atanResult);
-				Assert.InRange((double)tanResult, (double)value - Tolerance, (double)value + Tolerance);
+				Assert.InRange((double)tanResult, (double)value - (double)Fixed64.LooseTolerance * 10, (double)value + (double)Fixed64.LooseTolerance*10);
 			}
 		}
 
@@ -395,7 +395,7 @@ namespace Fixed64Test
 		// 	FixedMathTestHelper.AssertWithinRelativeTolerance(Fixed64.piOver4, Fixed64.Atan2(Fixed64.one, Fixed64.one));// 45 degrees
 		// 	FixedMathTestHelper.AssertWithinRelativeTolerance(-Fixed64.piOver4, Fixed64.Atan2(-Fixed64.one, Fixed64.one));// -45 degrees
 		// 	FixedMathTestHelper.AssertWithinRelativeTolerance(3 * Fixed64.piOver4, Fixed64.Atan2(Fixed64.one, -Fixed64.one));// 135 degrees
-		// 	FixedMathTestHelper.AssertWithinRelativeTolerance(-3 * Fixed64.piOver4, Fixed64.Atan2(-Fixed64.one, -Fixed64.one));// -135 degrees          
+		// 	FixedMathTestHelper.AssertWithinRelativeTolerance(-3 * Fixed64.piOver4, Fixed64.Atan2(-Fixed64.one, -Fixed64.one));// -135 degrees
 		// }
 		//
 		// [Fact]

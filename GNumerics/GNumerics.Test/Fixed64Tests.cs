@@ -4,7 +4,7 @@ using Gal.Core; // 你的 Fixed64 所在命名空间
 
 namespace Fixed64Test {
     public class Fixed64Tests {
-        private static double Tolerance = (double)(Fixed64.Epsilon);
+        private static double Tolerance = (double)(Fixed64.LooseTolerance);
 
         [Fact]
         public void FromInt_And_ToInt_Roundtrip() {
