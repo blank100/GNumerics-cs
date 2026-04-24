@@ -8,9 +8,27 @@ public static class Math {
 #if USE_FIXED64
     public static readonly Single MaxSingle = Single.MaxValue;
     public static readonly Single MinSingle = Single.MinValue;
+
+    public static readonly Single Zero = Single.Zero;
+    public static readonly Single One = Single.One;
+    public static readonly Single Two = Single.Two;
+    public static readonly Single Dot5 = Single.Dot5;
+    public static readonly Single Dot1 = Single.Parse("0.1");
+    public static readonly Single Dot01 = Single.Parse("0.01");
+    public static readonly Single Dot001 = Single.Parse("0.001");
+    public static readonly Single Dot0001 = Single.Parse("0.0001");
 #else
     public const Single MaxSingle = Single.MaxValue;
     public const Single MinSingle = Single.MinValue;
+
+    public const Single Zero = 0f;
+    public const Single One = 1f;
+    public const Single Two = 2f;
+    public const Single Dot5 = 0.5f;
+    public const Single Dot1 = 0.1f;
+    public const Single Dot01 = 0.01f;
+    public const Single Dot001 = 0.001f;
+    public const Single Dot0001 = 0.0001f;
 #endif
 
 #if USE_FIXED64
@@ -177,6 +195,41 @@ public static class Math {
 #endif
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Single InvSqrt(Single v) {
+#if USE_FIXED64
+        return Single.InvSqrt(v);
+#else
+        return 1f/(Single)System.Math.Sqrt(v);
+#endif
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Double InvSqrt(Double v) {
+#if USE_FIXED64
+        return Double.InvSqrt(v);
+#else
+        return 1d/System.Math.Sqrt(v);
+#endif
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Single FastSqrt(Single v) {
+#if USE_FIXED64
+        return Single.FastSqrt(v);
+#else
+        return (Single)System.Math.Sqrt(v);
+#endif
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Double FastSqrt(Double v) {
+#if USE_FIXED64
+        return Double.FastSqrt(v);
+#else
+        return System.Math.Sqrt(v);
+#endif
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Single Exp(Single v) {

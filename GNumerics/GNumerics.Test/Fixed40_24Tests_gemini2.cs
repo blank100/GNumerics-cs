@@ -20,7 +20,7 @@ namespace Gal.Core.Tests
             Assert.Equal(0, Fixed40_24.Zero.Raw);
             Assert.Equal(OneRaw, Fixed40_24.One.Raw);
             Assert.Equal(OneRaw * 2, Fixed40_24.Two.Raw);
-            Assert.Equal(OneRaw / 2, Fixed40_24.HalfOne.Raw);
+            Assert.Equal(OneRaw / 2, Fixed40_24.Dot5.Raw);
         }
 
         [Theory]

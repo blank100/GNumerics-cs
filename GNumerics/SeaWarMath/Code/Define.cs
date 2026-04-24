@@ -1,7 +1,7 @@
 ﻿namespace SeaWar.Mathematics;
 
 public struct Define {
-    public static Single HalfOne = Single.HalfOne;
+    public static Single HalfOne = Single.Dot5;
 
     public static Single SafeMinValue = Single.Epsilon;
     public static Single SafeMaxValue = Single.MaxValue;

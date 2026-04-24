@@ -42,7 +42,7 @@ namespace Gal.Core {
         public static readonly NumericType Zero = new(0L);
         public static readonly NumericType One = new(OneRawValue);
         public static readonly NumericType Two = new(TwoRawValue);
-        public static readonly NumericType HalfOne = new(HalfOneRawValue);
+        public static readonly NumericType Dot5 = new(HalfOneRawValue);
 
         public static readonly NumericType MaxValue = new(long.MaxValue);
         public static readonly NumericType MinValue = new(long.MinValue);
@@ -119,6 +119,15 @@ namespace Gal.Core {
 
         // C3 = 1/120 = 0.00833333...
         private static readonly NumericType PadeC3 = new(35791394);
+
+        // 0.2928932
+        private static readonly long _invSqrtFastArg1 = 1257149253L;
+
+        // 0.70710678
+        private static readonly long _invSqrtFastArg2 = 3037000500L;
+
+        // 0.20710678
+        private static readonly long _invSqrtFastArg3 = 889216706L;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumericType FromRaw(long rawValue) => new(rawValue);
@@ -373,10 +382,21 @@ namespace Gal.Core {
         public static NumericType Sqrt(NumericType value) => new(Fixed64Utils.Sqrt(value._raw, FRACTION_BITS));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static NumericType InvSqrt(NumericType value) => new(Fixed64Utils.InvSqrtFast(value._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
+        public static NumericType FastSqrt(NumericType x) {
+            if (x <= 0) return 0;
+
+            var raw = x._raw;
+            var inv = Fixed64Utils.InvSqrtFast(raw, FRACTION_BITS, FRACTIONAL_PART_MASK, _invSqrtFastArg1, _invSqrtFastArg2, _invSqrtFastArg3);
+            return new(Fixed64Utils.FastMul(raw, inv, FRACTION_BITS, FRACTIONAL_PART_MASK));
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static NumericType Pow(NumericType value, int exponent) => new(Fixed64Utils.Pow(value._raw, exponent, OneRawValue, FRACTION_BITS, FRACTIONAL_PART_MASK));
+        public static NumericType InvSqrt(NumericType value) =>
+            new(Fixed64Utils.InvSqrtFast(value._raw, FRACTION_BITS, FRACTIONAL_PART_MASK, _invSqrtFastArg1, _invSqrtFastArg2, _invSqrtFastArg3));
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static NumericType Pow(NumericType value, int exponent) =>
+            new(Fixed64Utils.Pow(value._raw, exponent, OneRawValue, FRACTION_BITS, FRACTIONAL_PART_MASK));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumericType Pow(NumericType b, NumericType exp) =>

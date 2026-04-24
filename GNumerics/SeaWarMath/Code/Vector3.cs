@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Runtime.InteropServices;
 
 namespace SeaWar.Mathematics {
     /// <summary>
@@ -7,27 +6,8 @@ namespace SeaWar.Mathematics {
     /// </summary>
     /// <author>gouanlin</author>
     [Serializable]
-#if USE_FIXED64
-    [StructLayout(LayoutKind.Explicit, Size = 24)]
-#else
-	[StructLayout(LayoutKind.Explicit, Size = 12)]
-#endif
     public struct Vector3 {
-        [FieldOffset(0)] public Single x;
-
-#if USE_FIXED64
-        [FieldOffset(8)]
-#else
-		[FieldOffset(4)]
-#endif
-        public Single y;
-
-#if USE_FIXED64
-        [FieldOffset(16)]
-#else
-		[FieldOffset(8)]
-#endif
-        public Single z;
+        public Single x, y, z;
 
         public Single this[int index] {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -80,6 +60,7 @@ namespace SeaWar.Mathematics {
         public static Vector3 LerpUnclamped(Vector3 a, Vector3 b, Single t) =>
             new(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, a.z + (b.z - a.z) * t);
 
+        /// 如果调用的比较频繁,建议外部缓存两向量的距离后手动实现
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 MoveTowards(Vector3 current, Vector3 target, Single maxDistanceDelta) {
             var tx = target.x - current.x;
@@ -101,8 +82,71 @@ namespace SeaWar.Mathematics {
             Single maxRadiansDelta,
             Single maxMagnitudeDelta
         ) {
-            throw new NotImplementedException();
+            var curMag = current.Magnitude;
+            var tarMag = target.Magnitude;
+
+            // --- 1. 处理零向量（必须提前）
+            if (curMag < Math.NormalizeEpsilon || tarMag < Math.NormalizeEpsilon)
+            {
+                return MoveTowards(current, target, maxMagnitudeDelta);
+            }
+
+            // --- 2. 单位方向
+            var from = current / curMag;
+            var to = target / tarMag;
+
+            var dot = Dot(from, to);
+            dot = Math.Clamp(dot, -Math.One, Math.One);
+
+            var angle = Math.Acos(dot);
+
+            // --- 3. 限制旋转
+            var t = (angle > Math.NormalizeEpsilon)
+                ? Math.Min(Math.One, maxRadiansDelta / angle)
+                : Math.One;
+
+            // --- 4. Slerp方向
+            var sinAngle = Math.Sin(angle);
+
+            Vector3 newDir;
+            if (sinAngle > Math.NormalizeEpsilon)
+            {
+                var coeff0 = Math.Sin((1 - t) * angle) / sinAngle;
+                var coeff1 = Math.Sin(t * angle) / sinAngle;
+                newDir = from * coeff0 + to * coeff1;
+            }
+            else
+            {
+                newDir = to;
+            }
+
+            // --- 5. 目标长度（不直接用scalar MoveTowards）
+            var newMag = curMag;
+
+            if (Math.Abs(tarMag - curMag) > Math.NormalizeEpsilon)
+            {
+                var delta = tarMag - curMag;
+                var maxDelta = maxMagnitudeDelta;
+
+                if (Math.Abs(delta) <= maxDelta)
+                    newMag = tarMag;
+                else
+                    newMag = curMag + Math.Sign(delta) * maxDelta;
+            }
+
+            var rotated = newDir * newMag;
+
+            // --- 6. 最关键：再用 Vector MoveTowards 兜底（统一语义）
+            return MoveTowards(current, rotated, maxMagnitudeDelta);
         }
+
+#if USE_FIXED64
+        private static readonly Single _dot48 = Single.Parse("0.48");
+        private static readonly Single _dot235 = Single.Parse("0.235");
+#else
+        private const Single _dot48 = 0.48;
+        private const Single _dot235 = 0.235;
+#endif
 
         public static Vector3 SmoothDamp(
             Vector3 current,
@@ -112,7 +156,42 @@ namespace SeaWar.Mathematics {
             Single maxSpeed,
             Single deltaTime
         ) {
-            throw new NotImplementedException();
+            smoothTime = Math.Max(Math.Dot0001, smoothTime);
+
+            var omega = Math.Two / smoothTime;
+
+            var x = omega * deltaTime;
+            var exp = Math.One / (Math.One + x + _dot48 * x * x + _dot235 * x * x * x);
+
+            var change = current - target;
+            var maxChange = maxSpeed * smoothTime;
+
+            // 限制最大移动范围
+            var maxChangeSq = maxChange * maxChange;
+            var sqrmag = change.SqrMagnitude;
+            if (sqrmag > maxChangeSq) {
+                var mag = Math.Sqrt(sqrmag);
+                change = change / mag * maxChange;
+            }
+
+            var targetTemp = current - change;
+
+            // 更新速度
+            var temp = (currentVelocity + change * omega) * deltaTime;
+            currentVelocity = (currentVelocity - temp * omega) * exp;
+
+            var output = targetTemp + (change + temp) * exp;
+
+            // 防止 overshoot
+            var origMinusCurrent = target - current;
+            var outMinusOrig = output - target;
+
+            if (Dot(origMinusCurrent, outMinusOrig) > 0) {
+                output = target;
+                currentVelocity = (output - target) / deltaTime;
+            }
+
+            return output;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -125,19 +204,19 @@ namespace SeaWar.Mathematics {
             z *= scale.z;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Normalize() {
-            var m = Magnitude;
-            if (m > Math.NormalizeEpsilon) this /= m;
-            else this = Zero;
-        }
-
         public Vector3 Normalized {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get {
-                var normalized = new Vector3(x, y, z);
-                normalized.Normalize();
-                return normalized;
+                var m = Math.Sqrt(x * x + y * y + z * z);
+                return m > Math.NormalizeEpsilon ? this / m : Zero;
+            }
+        }
+
+        public Vector3 FastNormalized {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get {
+                var lenSq = x * x + y * y + z * z;
+                return lenSq > Math.NormalizeEpsilon ? this * Math.InvSqrt(lenSq) : Zero;
             }
         }
 
@@ -179,7 +258,15 @@ namespace SeaWar.Mathematics {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Angle(Vector3 from, Vector3 to) {
             var num = Math.Sqrt(from.SqrMagnitude * to.SqrMagnitude);
-            return num < Math.LooseTolerance ? 0 : Math.Acos(Math.Clamp(Vector3.Dot(from, to) / num, -1, 1)) * Math.Rad2Deg;
+            return num < Math.LooseTolerance ? 0 : Math.Acos(Math.Clamp(Dot(from, to) / num, -1, 1)) * Math.Rad2Deg;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single FastAngle(Vector3 from, Vector3 to) {
+            var denom = from.SqrMagnitude * to.SqrMagnitude;
+            if (denom < Math.NormalizeEpsilon) return 0;
+            var inv = Math.InvSqrt(denom);
+            return Math.Acos(Math.Clamp(Dot(from, to) * inv, -1, 1)) * Math.Rad2Deg;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -200,12 +287,25 @@ namespace SeaWar.Mathematics {
             return Math.Sqrt(tx * tx + ty * ty + tz * tz);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single FastDistance(Vector3 a, Vector3 b) {
+            var tx = a.x - b.x;
+            var ty = a.y - b.y;
+            var tz = a.z - b.z;
+            return Math.FastSqrt(tx * tx + ty * ty + tz * tz);
+        }
+
         public readonly Single Magnitude {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => Math.Sqrt(x * x + y * y + z * z);
         }
 
-        public Single SqrMagnitude {
+        public readonly Single FastMagnitude {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => Math.FastSqrt(x * x + y * y + z * z);
+        }
+
+        public readonly Single SqrMagnitude {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => x * x + y * y + z * z;
         }
@@ -216,6 +316,14 @@ namespace SeaWar.Mathematics {
             if (lengthSq <= maxLength * maxLength) return vector;
             var length = Math.Sqrt(lengthSq);
             return new(vector.x / length * maxLength, vector.y / length * maxLength, vector.z / length * maxLength);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Vector3 FastClampMagnitude(Vector3 vector, Single maxLength) {
+            var lengthSq = vector.SqrMagnitude;
+            if (lengthSq <= maxLength * maxLength) return vector;
+            var invLen = Math.InvSqrt(lengthSq);
+            return new(vector.x * invLen * maxLength, vector.y * invLen * maxLength, vector.z * invLen * maxLength);
         }
 
         public override string ToString() => ToString(null, null);
@@ -288,44 +396,13 @@ namespace SeaWar.Mathematics {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Vector3 a, Vector3 b) => !(a == b);
 
-        public static Vector3 Zero {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get;
-        } = new(0, 0, 0);
-
-        public static Vector3 One {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get;
-        } = new(1, 1, 1);
-
-        public static Vector3 Up {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get;
-        } = new(0, 1, 0);
-
-        public static Vector3 Down {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get;
-        } = new(0, -1, 0);
-
-        public static Vector3 Left {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get;
-        } = new(-1, 0, 0);
-
-        public static Vector3 Right {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get;
-        } = new(1, 0, 0);
-
-        public static Vector3 Forward {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get;
-        } = new(0, 0, 1);
-
-        public static Vector3 Back {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get;
-        } = new(0, 0, -1);
+        public static readonly Vector3 Zero = new(0, 0, 0);
+        public static readonly Vector3 One = new(1, 1, 1);
+        public static readonly Vector3 Up = new(0, 1, 0);
+        public static readonly Vector3 Down = new(0, -1, 0);
+        public static readonly Vector3 Left = new(-1, 0, 0);
+        public static readonly Vector3 Right = new(1, 0, 0);
+        public static readonly Vector3 Forward = new(0, 0, 1);
+        public static readonly Vector3 Back = new(0, 0, -1);
     }
 }
