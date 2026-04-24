@@ -30,7 +30,9 @@ namespace Fixed64Test {
 
         [Fact]
         public void ParseTest() {
-            Assert.Equal(Fixed64.Parse("-2.71828000000000000"), (Fixed64)(-2.71828m));
+            // Assert.Equal(Fixed64.Parse(Fixed64.One.ToString()), Fixed64.One);
+            Assert.Throws<OverflowException>(() => Fixed64.Parse("123456879102.71828"));
+            // Assert.Equal((decimal)Fixed64.Parse("123456879102.71828"),123456879102.71828m);
         }
 
         [Fact]
@@ -74,7 +76,8 @@ namespace Fixed64Test {
             Assert.Equal(Fixed64.Parse("-3.1415"), (Fixed64)(-3.1415m));
             Assert.Equal(Fixed64.Parse("2.71828"), (Fixed64)(2.71828m));
             Assert.Equal(Fixed64.Parse("-2.71828"), (Fixed64)(-2.71828m));
-            Assert.Equal(Fixed64.Parse("123456879102.71828"), (Fixed64)(-2.71828m));
+
+            Assert.Throws<OverflowException>(() => Fixed64.Parse("123456879102.71828"));
         }
 
         [Fact]

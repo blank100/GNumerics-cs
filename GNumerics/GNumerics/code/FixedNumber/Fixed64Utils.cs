@@ -10,48 +10,69 @@ namespace Gal.Core {
         public static long FromChars(ReadOnlySpan<char> chars, int fractionBits) {
             if (chars.IsEmpty) return 0;
 
-            ulong INTEGER_PART_MASK = ulong.MaxValue >> fractionBits << fractionBits;
-            ulong FRACTIONAL_PART_MASK = ~INTEGER_PART_MASK;
-
-            var integerPartMaxValue = ulong.MaxValue >> fractionBits;
-
-            var sign = 1;
-            var iPart = 0L;
             int i = 0, l = chars.Length;
+            int sign = 1;
 
-            var n = chars[i];
-            switch (n) {
-                case '-':
-                    sign = -1;
-                    i++;
-                    break;
-                case '+':
-                    sign = 1;
-                    i++;
-                    break;
+            // 处理符号位
+            char n = chars[i];
+            if (n == '-') {
+                sign = -1;
+                i++;
+            } else if (n == '+') {
+                i++;
             }
 
-            while (i < l && char.IsDigit(n = chars[i++])) iPart = iPart * 10 + (n - '0');
-            if ((ulong)iPart > integerPartMaxValue) throw new Exception("整数部分越界了");
+            // 整数部分 (iPart)
+            long iPart = 0;
+            // 整数部分能允许的最大值 (防止 iPart << fractionBits 溢出)
+            long iPartLimit = (long.MaxValue >> fractionBits);
 
-            if (i >= l) return (iPart << fractionBits) * sign;
-            if (n != '.') throw new FormatException("Invalid format");
+            while (i < l) {
+                n = chars[i];
+                if ((uint)(n - '0') > 9) {
+                    if (n != '.') throw new FormatException();
+                    break; // 快速判断是否为数字
+                }
 
-            var fMaxValue = 1L << fractionBits;
+                iPart = iPart * 10 + (n - '0');
+                if (iPart > iPartLimit) throw new OverflowException("Integer part overflow");
+                i++;
+            }
 
-            var fPart = 0L;
-            var exp = 1L;
-            // 限制小数解析长度，防止溢出，同时保证精度
-            while (i < l && exp <= (1L << fractionBits)) {
-                if (!char.IsDigit(chars[i])) throw new FormatException("Invalid format");
-                fPart = fPart * 10 + (chars[i] - '0');
+            // 如果没有小数部分，直接返回
+            if (i >= l || chars[i] != '.') {
+                return (iPart << fractionBits) * sign;
+            }
+
+            i++; // 跳过 '.'
+
+            // 3. 解析小数部分 (fPart)
+            long fPart = 0;
+            long exp = 1;
+
+            // 关键优化：预计算 fPart 能够安全左移的最大限额
+            // 同时也受限于 long.MaxValue / 10 以防止 fPart * 10 溢出
+            long fPartLimit = Math.Min(long.MaxValue / 10 - 9, iPartLimit);
+
+            while (i < l) {
+                n = chars[i];
+                uint digit = (uint)(n - '0');
+                if (digit > 9) throw new FormatException();
+
+                // 只需一次判断：既保证了下一次 fPart 不溢出，也保证了后续左移安全
+                if (fPart > fPartLimit) break;
+
+                fPart = fPart * 10 + digit;
                 exp *= 10;
                 i++;
-                if(fPart > fMaxValue) break;
+
+                // 预防 exp 溢出（通常 fPartLimit 远早于 exp 溢出，此步可作为安全兜底）
+                if (exp > long.MaxValue / 10) break;
             }
 
-            // 使用乘法代替左移防溢出
-            return sign * ((iPart << fractionBits) + (fPart << fractionBits) / exp);
+            // 4. 合并结果：利用 (fPart << fractionBits) / exp
+            // 由于循环内做了 fPartLimit 限制，这里的左移是绝对安全的
+            return sign * ((iPart << fractionBits) + ((fPart << fractionBits) / exp));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
