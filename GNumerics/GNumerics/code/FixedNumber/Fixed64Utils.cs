@@ -10,11 +10,16 @@ namespace Gal.Core {
         public static long FromChars(ReadOnlySpan<char> chars, int fractionBits) {
             if (chars.IsEmpty) return 0;
 
+            ulong INTEGER_PART_MASK = ulong.MaxValue >> fractionBits << fractionBits;
+            ulong FRACTIONAL_PART_MASK = ~INTEGER_PART_MASK;
+
+            var integerPartMaxValue = ulong.MaxValue >> fractionBits;
+
             var sign = 1;
             var iPart = 0L;
             int i = 0, l = chars.Length;
-            var n = chars[i];
 
+            var n = chars[i];
             switch (n) {
                 case '-':
                     sign = -1;
@@ -27,25 +32,32 @@ namespace Gal.Core {
             }
 
             while (i < l && char.IsDigit(n = chars[i++])) iPart = iPart * 10 + (n - '0');
+            if ((ulong)iPart > integerPartMaxValue) throw new Exception("整数部分越界了");
 
             if (i >= l) return (iPart << fractionBits) * sign;
             if (n != '.') throw new FormatException("Invalid format");
 
+            var fMaxValue = 1L << fractionBits;
+
             var fPart = 0L;
-            var exp = 1;
-            while (i < l) {
-                if (!char.IsDigit(n = chars[i++])) throw new FormatException("Invalid format");
-                fPart = fPart * 10 + (n - '0');
+            var exp = 1L;
+            // 限制小数解析长度，防止溢出，同时保证精度
+            while (i < l && exp <= (1L << fractionBits)) {
+                if (!char.IsDigit(chars[i])) throw new FormatException("Invalid format");
+                fPart = fPart * 10 + (chars[i] - '0');
                 exp *= 10;
+                i++;
+                if(fPart > fMaxValue) break;
             }
 
+            // 使用乘法代替左移防溢出
             return sign * ((iPart << fractionBits) + (fPart << fractionBits) / exp);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static long Abs(long v) {
             var mask = v >> 63;
-            return v + mask ^ mask;
+            return (v + mask) ^ mask;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -190,17 +202,17 @@ namespace Gal.Core {
             return (long)result;
         }
 
-        public static long InvSqrtFast(long x, int fractionBits, ulong fractionalPartMask, long argument1, long argument2, long argument3) {
+        public static long InvSqrtFast(long x, int fractionBits, ulong fractionalPartMask, long dot2928932, long dot70710678, long dot20710678) {
             if (x <= 0) return 0;
 
-            int lz = BitOperations.LeadingZeroCount((ulong)x);
-            int msbIndex = 63 - lz;
-            int exponent = msbIndex - fractionBits;
+            var lz = BitOperations.LeadingZeroCount((ulong)x);
+            var msbIndex = 63 - lz;
+            var exponent = msbIndex - fractionBits;
 
             // 提取尾数 m ∈ [1, 2)，f 为纯小数部分
-            int shift = fractionBits - msbIndex;
-            long m = shift >= 0 ? x << shift : x >> -shift;
-            long f = m & (long)fractionalPartMask;
+            var shift = fractionBits - msbIndex;
+            var m = shift >= 0 ? x << shift : x >> -shift;
+            var f = m & (long)fractionalPartMask;
 
             // ------------------------------------------------------------
             // ✅ 极致优化：用普通 64 位乘法替代 FastMul，并融合奇偶指数补偿
@@ -211,22 +223,22 @@ namespace Gal.Core {
             // ------------------------------------------------------------
             long y;
             if ((exponent & 1) == 0) {
-                y = (1L << fractionBits) - ((f * argument1) >> fractionBits);
+                y = (1L << fractionBits) - ((f * dot2928932) >> fractionBits);
             } else {
-                y = argument2 - ((f * argument3) >> fractionBits);
+                y = dot70710678 - ((f * dot20710678) >> fractionBits);
             }
 
             // 应用指数部分: y *= 2^(-exponent / 2)
-            int halfExp = exponent >> 1;
+            var halfExp = exponent >> 1;
             y = halfExp >= 0 ? y >> halfExp : y << -halfExp;
 
             // ------------------------------------------------------------
             // ✅ 展开 2 次牛顿迭代 (固定 6 个 FastMul，无分支)
             // ------------------------------------------------------------
-            long threeHalfs = 3L << (fractionBits - 1);
+            var threeHalfs = 3L << (fractionBits - 1);
 
-            long y2 = FastMul(y, y, fractionBits, fractionalPartMask);
-            long xy2 = FastMul(x, y2, fractionBits, fractionalPartMask);
+            var y2 = FastMul(y, y, fractionBits, fractionalPartMask);
+            var xy2 = FastMul(x, y2, fractionBits, fractionalPartMask);
             y = FastMul(y, threeHalfs - (xy2 >> 1), fractionBits, fractionalPartMask);
 
             y2 = FastMul(y, y, fractionBits, fractionalPartMask);

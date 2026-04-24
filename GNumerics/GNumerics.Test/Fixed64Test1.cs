@@ -29,6 +29,11 @@ namespace Fixed64Test {
         }
 
         [Fact]
+        public void ParseTest() {
+            Assert.Equal(Fixed64.Parse("-2.71828000000000000"), (Fixed64)(-2.71828m));
+        }
+
+        [Fact]
         public void DecimalToFix64AndBack() {
             Assert.Equal(Fixed64.MaxValue, (Fixed64)(decimal)Fixed64.MaxValue);
             Assert.Equal(Fixed64.MinValue, (Fixed64)(decimal)Fixed64.MinValue);
@@ -62,10 +67,14 @@ namespace Fixed64Test {
             Assert.Equal(sbyte.MaxValue, (decimal)(Fixed64)sbyte.MaxValue);
             Assert.Equal(sbyte.MinValue, (decimal)(Fixed64)sbyte.MinValue);
 
+            Assert.Equal(Fixed64.Parse("+5.65"), (Fixed64)(5.65m));
+            Assert.Equal(Fixed64.Parse("5"), (Fixed64)(5m));
+            Assert.Equal(Fixed64.Parse("123"), (Fixed64)(123m));
             Assert.Equal(Fixed64.Parse("3.1415"), (Fixed64)(3.1415m));
             Assert.Equal(Fixed64.Parse("-3.1415"), (Fixed64)(-3.1415m));
             Assert.Equal(Fixed64.Parse("2.71828"), (Fixed64)(2.71828m));
             Assert.Equal(Fixed64.Parse("-2.71828"), (Fixed64)(-2.71828m));
+            Assert.Equal(Fixed64.Parse("123456879102.71828"), (Fixed64)(-2.71828m));
         }
 
         [Fact]
