@@ -14,6 +14,24 @@ public static class Math {
 #endif
 
 #if USE_FIXED64
+    // ===== 几何通用 =====
+    public static readonly Single Tolerance = Single.FromRaw(1L << 8); // ≈ 6e-8
+    public static readonly Single TightTolerance = Single.FromRaw(1L << 6); // ≈ 1.5e-8
+    public static readonly Single LooseTolerance = Single.FromRaw(1L << 10); // ≈ 2.4e-7
+
+    // ===== 向量 / 归一化 =====
+    public static readonly Single NormalizeEpsilon = Single.FromRaw(1L << 10);
+#else
+    // ===== 几何通用 =====
+    public static readonly Single Tolerance = Single.FromRaw(1L << 8); // ≈ 6e-8
+    public static readonly Single TightTolerance = Single.FromRaw(1L << 6); // ≈ 1.5e-8
+    public static readonly Single LooseTolerance = Single.FromRaw(1L << 10); // ≈ 2.4e-7
+
+    // ===== 向量 / 归一化 =====
+    public static readonly Single NormalizeEpsilon = 1.1754944E-38f;
+#endif
+
+#if USE_FIXED64
     public static readonly Single Deg2Rad = Single.Deg2Rad;
     public static readonly Single Rad2Deg = Single.Rad2Deg;
 

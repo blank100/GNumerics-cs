@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+﻿using NumericType = Gal.Core.Fixed40_24;
 
 namespace Gal.Core {
     /// <summary>
@@ -20,107 +20,107 @@ namespace Gal.Core {
         public const ulong FRACTIONAL_PART_MASK = ~INTEGER_PART_MASK;
 
         /// 最小单位
-        public static readonly Fixed40_24 Precision = new(1);
+        public static readonly NumericType Precision = new(1);
 
         /// 机器epsilon（用于极限判断）
-        public static readonly Fixed40_24 Epsilon = new(1 << 6);
+        public static readonly NumericType Epsilon = new(1 << 6);
 
         /// 常规几何判断
-        public static readonly Fixed40_24 Tolerance = new(1L << 8);
+        public static readonly NumericType Tolerance = new(1L << 8);
 
         /// 更宽松（比如接触稳定）
-        public static readonly Fixed40_24 LooseTolerance = new(1L << 10);
+        public static readonly NumericType LooseTolerance = new(1L << 10);
 
         /// 非常严格（例如归一化）
-        public static readonly Fixed40_24 TightTolerance = new(1L << 6);
+        public static readonly NumericType TightTolerance = new(1L << 6);
 
         /// 支持的小数位数
         public static readonly int FractionalDigits = (int)Math.Log10(OneRawValue);
         public static readonly string StringFormat = "0." + new string('#', FractionalDigits);
-        public static readonly Fixed40_24 Zero = new(0L);
-        public static readonly Fixed40_24 One = new(OneRawValue);
-        public static readonly Fixed40_24 Two = new(TwoRawValue);
-        public static readonly Fixed40_24 HalfOne = new(HalfOneRawValue);
-        public static readonly Fixed40_24 MaxValue = new(long.MaxValue);
-        public static readonly Fixed40_24 MinValue = new(long.MinValue);
+        public static readonly NumericType Zero = new(0L);
+        public static readonly NumericType One = new(OneRawValue);
+        public static readonly NumericType Two = new(TwoRawValue);
+        public static readonly NumericType HalfOne = new(HalfOneRawValue);
+        public static readonly NumericType MaxValue = new(long.MaxValue);
+        public static readonly NumericType MinValue = new(long.MinValue);
 
         /// 3.14159265358979323846
-        public static readonly Fixed40_24 PI = new(52707179); //3.1415926814079285
+        public static readonly NumericType PI = new(52707179); //3.1415926814079285
 
         /// PI * 2
-        public static readonly Fixed40_24 TwoPI = new(PI._raw << 1);
+        public static readonly NumericType TwoPI = new(PI._raw << 1);
 
         /// PI / 2
-        public static readonly Fixed40_24 PIOver2 = new(PI._raw >> 1);
+        public static readonly NumericType PIOver2 = new(PI._raw >> 1);
 
         /// PI / 3
-        public static readonly Fixed40_24 PIOver3 = new(PI._raw / 3);
+        public static readonly NumericType PIOver3 = new(PI._raw / 3);
 
         /// PI / 4
-        public static readonly Fixed40_24 PIOver4 = new(PI._raw >> 2);
+        public static readonly NumericType PIOver4 = new(PI._raw >> 2);
 
         /// PI / 6
-        public static readonly Fixed40_24 PIOver6 = new(PI._raw / 6);
+        public static readonly NumericType PIOver6 = new(PI._raw / 6);
 
         /// Natural logarithm of 2<br/>
         /// 0.6931471805599453D
-        public static readonly Fixed40_24 LN2 = new(11629080); //0.6931471824645996
+        public static readonly NumericType LN2 = new(11629080); //0.6931471824645996
 
         // 1/LN2
-        public static readonly Fixed40_24 InvLn2 = 1 / LN2;
+        public static readonly NumericType InvLn2 = 1 / LN2;
 
-        public static readonly Fixed40_24 InvLog2_10 = 1 / Log2(10);
+        public static readonly NumericType InvLog2_10 = 1 / Log2(10);
 
         /// Asin Padé approximations<br/>
         /// 0.183320102085006D
-        public static readonly Fixed40_24 SPadeA1 = new(3075601); //0.18332010507583618
+        public static readonly NumericType SPadeA1 = new(3075601); //0.18332010507583618
 
         /// Asin Padé approximations<br/>
         /// 0.021880409899862D
-        public static readonly Fixed40_24 SPadeA2 = new(367092); //0.021880388259887695;
+        public static readonly NumericType SPadeA2 = new(367092); //0.021880388259887695;
 
         private const long _log2MinRawValue = -64L * OneRawValue;
-        public static readonly Fixed40_24 Log2Min = new(_log2MinRawValue);
+        public static readonly NumericType Log2Min = new(_log2MinRawValue);
 
         private const long _log2MaxRawValue = 63L * OneRawValue;
-        public static readonly Fixed40_24 Log2Max = new(_log2MaxRawValue);
+        public static readonly NumericType Log2Max = new(_log2MaxRawValue);
 
         /// <summary>
         /// Degrees to radians conversion factor
         /// <code>π / 180 = 0.01745329251994329576D</code>
         /// </summary>
-        public static readonly Fixed40_24 Deg2Rad = new(292818); //0.017453312873840332
+        public static readonly NumericType Deg2Rad = new(292818); //0.017453312873840332
 
         /// <summary>
         /// Radians to degrees conversion factor
         /// <code>180 / π = 57.2957795130823208767D</code>
         /// </summary>
-        public static readonly Fixed40_24 Rad2Deg = new(961263669); //57.29577952623367
+        public static readonly NumericType Rad2Deg = new(961263669); //57.29577952623367
 
         // Carefully optimized polynomial coefficients for sin(x), ensuring maximum precision in Fixed64 math.
         /// 0.16666667605750262737274169921875D; // 1/3!
-        public static readonly Fixed40_24 SSinCoeff3 = new(2796203); //0.1666666865348816
+        public static readonly NumericType SSinCoeff3 = new(2796203); //0.1666666865348816
 
         /// 0.0083328341133892536163330078125D; // 1/5!
-        public static readonly Fixed40_24 SSinCoeff5 = new(139802); //0.00833284854888916;
+        public static readonly NumericType SSinCoeff5 = new(139802); //0.00833284854888916;
 
         /// 0.00019588856957852840423583984375D; // 1/7!
-        public static readonly Fixed40_24 SSinCoeff7 = new(3286); //0.0001958608627319336;
+        public static readonly NumericType SSinCoeff7 = new(3286); //0.0001958608627319336;
 
         // --- Padé 近似系数 ---
         // C1 = 1/2 = 0.5
-        // private static readonly Fixed40_24 PadeC1 = new(8388608);
+        // private static readonly NumericType PadeC1 = new(8388608);
 
         // C2 = 1/10 = 0.1
-        private static readonly Fixed40_24 PadeC2 = new(1677722);
+        private static readonly NumericType PadeC2 = new(1677722);
 
         // C3 = 1/120 = 0.00833333...
-        private static readonly Fixed40_24 PadeC3 = new(139810);
+        private static readonly NumericType PadeC3 = new(139810);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 FromRaw(long rawValue) => new(rawValue);
+        public static NumericType FromRaw(long rawValue) => new(rawValue);
 
-        public static Fixed40_24 Parse(ReadOnlySpan<char> chars) => new(Fixed64Utils.FromChars(chars, FRACTION_BITS));
+        public static NumericType Parse(ReadOnlySpan<char> chars) => new(Fixed64Utils.FromChars(chars, FRACTION_BITS));
 
         private readonly long _raw;
 
@@ -133,197 +133,197 @@ namespace Gal.Core {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static explicit operator Fixed40_24(float v) => new((long)((double)v * OneRawValue));
+        public static explicit operator NumericType(float v) => new((long)((double)v * OneRawValue));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static explicit operator float(Fixed40_24 v) => (float)((double)v._raw / OneRawValue);
+        public static explicit operator float(NumericType v) => (float)((double)v._raw / OneRawValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator Fixed40_24(int v) => new((long)v << FRACTION_BITS);
+        public static implicit operator NumericType(int v) => new((long)v << FRACTION_BITS);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static explicit operator int(Fixed40_24 v) => (int)(v._raw >> FRACTION_BITS);
+        public static explicit operator int(NumericType v) => (int)(v._raw >> FRACTION_BITS);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator Fixed40_24(uint v) => new((long)v << FRACTION_BITS);
+        public static implicit operator NumericType(uint v) => new((long)v << FRACTION_BITS);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static explicit operator uint(Fixed40_24 v) => (uint)(v._raw >> FRACTION_BITS);
+        public static explicit operator uint(NumericType v) => (uint)(v._raw >> FRACTION_BITS);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static explicit operator Fixed40_24(long v) => new(v << FRACTION_BITS);
+        public static explicit operator NumericType(long v) => new(v << FRACTION_BITS);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static explicit operator long(Fixed40_24 v) => v._raw >> FRACTION_BITS;
+        public static explicit operator long(NumericType v) => v._raw >> FRACTION_BITS;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static explicit operator Fixed40_24(double v) => new((long)(v * OneRawValue));
+        public static explicit operator NumericType(double v) => new((long)(v * OneRawValue));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static explicit operator double(Fixed40_24 v) => (double)v._raw / OneRawValue;
+        public static explicit operator double(NumericType v) => (double)v._raw / OneRawValue;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static explicit operator Fixed40_24(decimal v) => new((long)(v * OneRawValue));
+        public static explicit operator NumericType(decimal v) => new((long)(v * OneRawValue));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator decimal(Fixed40_24 v) => (decimal)v._raw / OneRawValue;
+        public static implicit operator decimal(NumericType v) => (decimal)v._raw / OneRawValue;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static explicit operator Fixed40_24(string v) => Parse(v);
+        public static explicit operator NumericType(string v) => Parse(v);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static explicit operator Fixed40_24(ReadOnlySpan<char> v) => Parse(v);
+        public static explicit operator NumericType(ReadOnlySpan<char> v) => Parse(v);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static explicit operator Fixed40_24(Span<char> v) => Parse(v);
+        public static explicit operator NumericType(Span<char> v) => Parse(v);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static explicit operator Fixed40_24(ReadOnlyMemory<char> v) => Parse(v.Span);
+        public static explicit operator NumericType(ReadOnlyMemory<char> v) => Parse(v.Span);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static explicit operator Fixed40_24(Memory<char> v) => Parse(v.Span);
+        public static explicit operator NumericType(Memory<char> v) => Parse(v.Span);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 operator +(Fixed40_24 a) => new(a._raw);
+        public static NumericType operator +(NumericType a) => new(a._raw);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 operator -(Fixed40_24 a) => new(-a._raw);
+        public static NumericType operator -(NumericType a) => new(-a._raw);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 operator +(Fixed40_24 a, Fixed40_24 b) => new(checked(a._raw + b._raw));
+        public static NumericType operator +(NumericType a, NumericType b) => new(checked(a._raw + b._raw));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 operator +(Fixed40_24 a, int b) => new(checked(a._raw + ((long)b << FRACTION_BITS)));
+        public static NumericType operator +(NumericType a, int b) => new(checked(a._raw + ((long)b << FRACTION_BITS)));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 operator +(int a, Fixed40_24 b) => new(checked(((long)a << FRACTION_BITS) + b._raw));
+        public static NumericType operator +(int a, NumericType b) => new(checked(((long)a << FRACTION_BITS) + b._raw));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 operator -(Fixed40_24 a, Fixed40_24 b) => new(a._raw - b._raw);
+        public static NumericType operator -(NumericType a, NumericType b) => new(a._raw - b._raw);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 operator -(Fixed40_24 a, int b) => new(a._raw - ((long)b << FRACTION_BITS));
+        public static NumericType operator -(NumericType a, int b) => new(a._raw - ((long)b << FRACTION_BITS));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 operator -(int a, Fixed40_24 b) => new(((long)a << FRACTION_BITS) - b._raw);
+        public static NumericType operator -(int a, NumericType b) => new(((long)a << FRACTION_BITS) - b._raw);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 operator ++(Fixed40_24 a) => new(a._raw + OneRawValue);
+        public static NumericType operator ++(NumericType a) => new(a._raw + OneRawValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 operator --(Fixed40_24 a) => new(a._raw - OneRawValue);
+        public static NumericType operator --(NumericType a) => new(a._raw - OneRawValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 operator *(Fixed40_24 a, Fixed40_24 b) => new(Fixed64Utils.FastMul(a._raw, b._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
+        public static NumericType operator *(NumericType a, NumericType b) => new(Fixed64Utils.FastMul(a._raw, b._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 FastMul(Fixed40_24 a, Fixed40_24 b) => a * b;
+        public static NumericType FastMul(NumericType a, NumericType b) => a * b;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 operator *(Fixed40_24 a, int b) => new(Fixed64Utils.FastMul(a._raw, (long)b << FRACTION_BITS, FRACTION_BITS, FRACTIONAL_PART_MASK));
+        public static NumericType operator *(NumericType a, int b) => new(Fixed64Utils.FastMul(a._raw, (long)b << FRACTION_BITS, FRACTION_BITS, FRACTIONAL_PART_MASK));
 
         /// 有越界风险,当值很小时可以使用
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 FastMul(Fixed40_24 a, int b) => new(a._raw * b);
+        public static NumericType FastMul(NumericType a, int b) => new(a._raw * b);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 operator *(int a, Fixed40_24 b) => new(Fixed64Utils.FastMul((long)a << FRACTION_BITS, b._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
+        public static NumericType operator *(int a, NumericType b) => new(Fixed64Utils.FastMul((long)a << FRACTION_BITS, b._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
         /// 有越界风险,当值很小时可以使用
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 FastMul(int a, Fixed40_24 b) => new(a * b._raw);
+        public static NumericType FastMul(int a, NumericType b) => new(a * b._raw);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 operator /(Fixed40_24 a, Fixed40_24 b) => new(Fixed64Utils.Div(a._raw, b._raw, FRACTION_BITS));
+        public static NumericType operator /(NumericType a, NumericType b) => new(Fixed64Utils.Div(a._raw, b._raw, FRACTION_BITS));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 operator /(Fixed40_24 a, int b) => new(a._raw / b);
+        public static NumericType operator /(NumericType a, int b) => new(a._raw / b);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 operator /(int a, Fixed40_24 b) => new(Fixed64Utils.Div((long)a << FRACTION_BITS, b._raw, FRACTION_BITS));
+        public static NumericType operator /(int a, NumericType b) => new(Fixed64Utils.Div((long)a << FRACTION_BITS, b._raw, FRACTION_BITS));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 operator %(Fixed40_24 a, Fixed40_24 b) => new(a._raw % b._raw);
+        public static NumericType operator %(NumericType a, NumericType b) => new(a._raw % b._raw);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 operator <<(Fixed40_24 a, int c) => new(a._raw << c);
+        public static NumericType operator <<(NumericType a, int c) => new(a._raw << c);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 operator >> (Fixed40_24 a, int c) => new(a._raw >> c);
+        public static NumericType operator >> (NumericType a, int c) => new(a._raw >> c);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator ==(Fixed40_24 a, Fixed40_24 b) => a._raw == b._raw;
+        public static bool operator ==(NumericType a, NumericType b) => a._raw == b._raw;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator ==(Fixed40_24 a, int b) => a._raw == (long)b << FRACTION_BITS;
+        public static bool operator ==(NumericType a, int b) => a._raw == (long)b << FRACTION_BITS;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator ==(int a, Fixed40_24 b) => (long)a << FRACTION_BITS == b._raw;
+        public static bool operator ==(int a, NumericType b) => (long)a << FRACTION_BITS == b._raw;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator !=(Fixed40_24 a, Fixed40_24 b) => a._raw != b._raw;
+        public static bool operator !=(NumericType a, NumericType b) => a._raw != b._raw;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator !=(Fixed40_24 a, int b) => a._raw != (long)b << FRACTION_BITS;
+        public static bool operator !=(NumericType a, int b) => a._raw != (long)b << FRACTION_BITS;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator !=(int a, Fixed40_24 b) => (long)a << FRACTION_BITS != b._raw;
+        public static bool operator !=(int a, NumericType b) => (long)a << FRACTION_BITS != b._raw;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator >(Fixed40_24 a, Fixed40_24 b) => a._raw > b._raw;
+        public static bool operator >(NumericType a, NumericType b) => a._raw > b._raw;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator >(Fixed40_24 a, int b) => a._raw > (long)b << FRACTION_BITS;
+        public static bool operator >(NumericType a, int b) => a._raw > (long)b << FRACTION_BITS;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator >(int a, Fixed40_24 b) => (long)a << FRACTION_BITS > b._raw;
+        public static bool operator >(int a, NumericType b) => (long)a << FRACTION_BITS > b._raw;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator <(Fixed40_24 a, Fixed40_24 b) => a._raw < b._raw;
+        public static bool operator <(NumericType a, NumericType b) => a._raw < b._raw;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator <(Fixed40_24 a, int b) => a._raw < (long)b << FRACTION_BITS;
+        public static bool operator <(NumericType a, int b) => a._raw < (long)b << FRACTION_BITS;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator <(int a, Fixed40_24 b) => (long)a << FRACTION_BITS < b._raw;
+        public static bool operator <(int a, NumericType b) => (long)a << FRACTION_BITS < b._raw;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator >=(Fixed40_24 a, Fixed40_24 b) => a._raw >= b._raw;
+        public static bool operator >=(NumericType a, NumericType b) => a._raw >= b._raw;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator >=(Fixed40_24 a, int b) => a._raw >= (long)b << FRACTION_BITS;
+        public static bool operator >=(NumericType a, int b) => a._raw >= (long)b << FRACTION_BITS;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator >=(int a, Fixed40_24 b) => (long)a << FRACTION_BITS >= b._raw;
+        public static bool operator >=(int a, NumericType b) => (long)a << FRACTION_BITS >= b._raw;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator <=(Fixed40_24 a, Fixed40_24 b) => a._raw <= b._raw;
+        public static bool operator <=(NumericType a, NumericType b) => a._raw <= b._raw;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator <=(Fixed40_24 a, int b) => a._raw <= (long)b << FRACTION_BITS;
+        public static bool operator <=(NumericType a, int b) => a._raw <= (long)b << FRACTION_BITS;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator <=(int a, Fixed40_24 b) => (long)a << FRACTION_BITS <= b._raw;
+        public static bool operator <=(int a, NumericType b) => (long)a << FRACTION_BITS <= b._raw;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Equals(Fixed40_24 other) => _raw == other._raw;
+        public bool Equals(NumericType other) => _raw == other._raw;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override int GetHashCode() => _raw.GetHashCode();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int CompareTo(Fixed40_24 other) => _raw.CompareTo(other._raw);
+        public int CompareTo(NumericType other) => _raw.CompareTo(other._raw);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override bool Equals(object obj) => obj is Fixed40_24 other && Equals(other);
+        public override bool Equals(object obj) => obj is NumericType other && Equals(other);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static long GetRawValue(Fixed40_24 value) => value._raw;
+        public static long GetRawValue(NumericType value) => value._raw;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 SetRawValue(long value) => new(value);
+        public static NumericType SetRawValue(long value) => new(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Truncate(Fixed40_24 value) {
+        public static NumericType Truncate(NumericType value) {
             unchecked {
                 long raw = value._raw;
                 // 如果 raw < 0，offset = FRACTIONAL_PART_MASK；否则 offset = 0
@@ -334,13 +334,13 @@ namespace Gal.Core {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Floor(Fixed40_24 value) => new((long)((ulong)value._raw & INTEGER_PART_MASK));
+        public static NumericType Floor(NumericType value) => new((long)((ulong)value._raw & INTEGER_PART_MASK));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Ceiling(Fixed40_24 value) => ((ulong)value._raw & FRACTIONAL_PART_MASK) != 0 ? Floor(value) + One : value;
+        public static NumericType Ceiling(NumericType value) => ((ulong)value._raw & FRACTIONAL_PART_MASK) != 0 ? Floor(value) + One : value;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Abs(Fixed40_24 value) => new(Fixed64Utils.Abs(value._raw));
+        public static NumericType Abs(NumericType value) => new(Fixed64Utils.Abs(value._raw));
 
         /// <summary>
         /// 采用的是四舍六入五取偶原则(2.5->2,3.5->4)
@@ -348,41 +348,44 @@ namespace Gal.Core {
         /// <param name="value"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Round(Fixed40_24 value) => new(Fixed64Utils.Round(value._raw, OneRawValue, INTEGER_PART_MASK, FRACTIONAL_PART_MASK));
+        public static NumericType Round(NumericType value) => new(Fixed64Utils.Round(value._raw, OneRawValue, INTEGER_PART_MASK, FRACTIONAL_PART_MASK));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Clamp(Fixed40_24 value, Fixed40_24 min, Fixed40_24 max) => value._raw < min._raw ? min : value._raw > max._raw ? max : value;
+        public static NumericType Clamp(NumericType value, NumericType min, NumericType max) => value._raw < min._raw ? min : value._raw > max._raw ? max : value;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Clamp01(Fixed40_24 value) => value._raw < Zero._raw ? Zero : value._raw > OneRawValue ? One : value;
+        public static NumericType Clamp01(NumericType value) => value._raw < Zero._raw ? Zero : value._raw > OneRawValue ? One : value;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Min(Fixed40_24 a, Fixed40_24 b) => a._raw <= b._raw ? a : b;
+        public static NumericType Min(NumericType a, NumericType b) => a._raw <= b._raw ? a : b;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Max(Fixed40_24 a, Fixed40_24 b) => a._raw >= b._raw ? a : b;
+        public static NumericType Max(NumericType a, NumericType b) => a._raw >= b._raw ? a : b;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int Sign(Fixed40_24 value) => value._raw < 0 ? -1 : value._raw > 0 ? 1 : 0;
+        public static int Sign(NumericType value) => value._raw < 0 ? -1 : value._raw > 0 ? 1 : 0;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Sqrt(Fixed40_24 value) => new(Fixed64Utils.Sqrt(value._raw, FRACTION_BITS));
+        public static NumericType Sqrt(NumericType value) => new(Fixed64Utils.Sqrt(value._raw, FRACTION_BITS));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Pow(Fixed40_24 value, int exponent) => new(Fixed64Utils.Pow(value._raw, exponent, OneRawValue, FRACTION_BITS, FRACTIONAL_PART_MASK));
+        public static NumericType InvSqrt(NumericType value) => new(Fixed64Utils.InvSqrtFast(value._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Pow(Fixed40_24 b, Fixed40_24 exp) =>
+        public static NumericType Pow(NumericType value, int exponent) => new(Fixed64Utils.Pow(value._raw, exponent, OneRawValue, FRACTION_BITS, FRACTIONAL_PART_MASK));
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static NumericType Pow(NumericType b, NumericType exp) =>
             new(Fixed64Utils.Pow(b.Raw, exp.Raw, OneRawValue, FRACTION_BITS, INTEGER_PART_MASK, FRACTIONAL_PART_MASK, _log2MinRawValue, _log2MaxRawValue, LN2._raw));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Pow2(Fixed40_24 x) =>
+        public static NumericType Pow2(NumericType x) =>
             new(Fixed64Utils.Pow2(x._raw, OneRawValue, FRACTION_BITS, INTEGER_PART_MASK, FRACTIONAL_PART_MASK, _log2MinRawValue, _log2MaxRawValue, LN2._raw));
 
         /// <summary>
         /// 基于 Padé [3/3] 近似的高精度 Exp 函数
         /// </summary>
-        public static Fixed40_24 Exp(Fixed40_24 x) =>
+        public static NumericType Exp(NumericType x) =>
             new(Fixed64Utils.Exp(
                 x._raw,
                 OneRawValue,
@@ -399,50 +402,50 @@ namespace Gal.Core {
 
         /// C# 和 unity 中, ln = log
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Log(Fixed40_24 x)
+        public static NumericType Log(NumericType x)
             // 使用换底公式: ln(x) = log2(x) * ln(2)
             => new(Fixed64Utils.FastMul(Log2(x)._raw, LN2._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Log2(Fixed40_24 x) => new(Fixed64Utils.Log2(x._raw, OneRawValue, FRACTION_BITS, FRACTIONAL_PART_MASK));
+        public static NumericType Log2(NumericType x) => new(Fixed64Utils.Log2(x._raw, OneRawValue, FRACTION_BITS, FRACTIONAL_PART_MASK));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Ln(Fixed40_24 x) =>
+        public static NumericType Ln(NumericType x) =>
             new(Fixed64Utils.FastMul(Log2(x)._raw, LN2._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Log10(Fixed40_24 x)
+        public static NumericType Log10(NumericType x)
             // 使用换底公式: log10(x) = log2(x) * (1 / log2(10))
             => new(Fixed64Utils.FastMul(Log2(x)._raw, InvLog2_10._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Sin(Fixed40_24 x) =>
+        public static NumericType Sin(NumericType x) =>
             new(Fixed64Utils.Sin(x.Raw, OneRawValue, FRACTION_BITS, FRACTIONAL_PART_MASK, PI.Raw, TwoPI.Raw, PIOver2.Raw, SSinCoeff3.Raw, SSinCoeff5.Raw, SSinCoeff7.Raw));
         // new(Fixed64Utils.Sin(x._Raw, FRACTION_BITS, INTEGER_PART_MASK, FRACTIONAL_PART_MASK, ONE_RAW_VALUE, pi._Raw, twoPI._Raw, piOver2._Raw));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Cos(Fixed40_24 x) =>
+        public static NumericType Cos(NumericType x) =>
             new(Fixed64Utils.Cos(x.Raw, OneRawValue, FRACTION_BITS, FRACTIONAL_PART_MASK, PI._raw, TwoPI._raw, PIOver2._raw, SSinCoeff3._raw, SSinCoeff5._raw, SSinCoeff7._raw));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Tan(Fixed40_24 x) =>
+        public static NumericType Tan(NumericType x) =>
             // new(Fixed64Utils.Tan(x._Raw, FRACTION_BITS, INTEGER_PART_MASK, FRACTIONAL_PART_MASK, ONE_RAW_VALUE, pi._Raw, piOver2._Raw));
             new(Fixed64Utils.Tan(x._raw, Precision._raw, OneRawValue, FRACTION_BITS, FRACTIONAL_PART_MASK, PI._raw, PIOver2._raw, PIOver4._raw, PIOver6._raw));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Asin(Fixed40_24 x) =>
+        public static NumericType Asin(NumericType x) =>
             new(Fixed64Utils.Asin(x._raw, FRACTION_BITS, FRACTIONAL_PART_MASK, OneRawValue, HalfOneRawValue, PI._raw, PIOver2._raw, PIOver6._raw, SPadeA1._raw, SPadeA2._raw));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Acos(Fixed40_24 x) => new(Fixed64Utils.Acos(x._raw, FRACTION_BITS, FRACTIONAL_PART_MASK, OneRawValue, PI._raw, PIOver2._raw));
+        public static NumericType Acos(NumericType x) => new(Fixed64Utils.Acos(x._raw, FRACTION_BITS, FRACTIONAL_PART_MASK, OneRawValue, PI._raw, PIOver2._raw));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Atan(Fixed40_24 z) =>
+        public static NumericType Atan(NumericType z) =>
             // new(Fixed64Utils.Atan(z._Raw, FRACTION_BITS, FRACTIONAL_PART_MASK, ONE_RAW_VALUE, piOver2._Raw));
             new(Fixed64Utils.Atan(z._raw, FRACTION_BITS, FRACTIONAL_PART_MASK, OneRawValue, HalfOneRawValue, Precision._raw, PIOver4._raw));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fixed40_24 Atan2(Fixed40_24 y, Fixed40_24 x) =>
+        public static NumericType Atan2(NumericType y, NumericType x) =>
             new(Fixed64Utils.Atan2(y._raw, x._raw, FRACTION_BITS, FRACTIONAL_PART_MASK, OneRawValue, PI._raw, PIOver2._raw));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -458,24 +461,24 @@ namespace Gal.Core {
         string IFormattable.
             ToString(string format, IFormatProvider formatProvider) => ((double)this).ToString(format, formatProvider);
 
-        public class Comparer : IComparer<Fixed40_24> {
+        public class Comparer : IComparer<NumericType> {
             public static readonly Comparer Instance = new ();
 
             private Comparer() {
             }
 
-            int IComparer<Fixed40_24>.Compare(Fixed40_24 x, Fixed40_24 y) => x._raw.CompareTo(y._raw);
+            int IComparer<NumericType>.Compare(NumericType x, NumericType y) => x._raw.CompareTo(y._raw);
         }
 
-        public class EqualityComparer : IEqualityComparer<Fixed40_24> {
+        public class EqualityComparer : IEqualityComparer<NumericType> {
             public static readonly EqualityComparer Instance = new();
 
             private EqualityComparer() {
             }
 
-            bool IEqualityComparer<Fixed40_24>.Equals(Fixed40_24 x, Fixed40_24 y) => x._raw == y._raw;
+            bool IEqualityComparer<NumericType>.Equals(NumericType x, NumericType y) => x._raw == y._raw;
 
-            int IEqualityComparer<Fixed40_24>.GetHashCode(Fixed40_24 num) => num._raw.GetHashCode();
+            int IEqualityComparer<NumericType>.GetHashCode(NumericType num) => num._raw.GetHashCode();
         }
     }
 }

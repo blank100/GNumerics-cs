@@ -157,7 +157,7 @@ namespace Gal.Core {
 
             for (var i = 0; i < 2; ++i) {
                 while (bit != 0) {
-                    ulong trial = result + bit;
+                    var trial = result + bit;
                     if (v >= trial) {
                         v -= trial;
                         result = (result >> 1) + bit;
@@ -190,6 +190,25 @@ namespace Gal.Core {
             return (long)result;
         }
 
+        public static long InvSqrtFast(long x, int fractionBits, ulong fractionalPartMask) {
+            if (x <= 0) return 0;
+
+            // 粗略初值（非常关键）
+            var lz = BitOperations.LeadingZeroCount((ulong)x);
+            var shift = (lz - 32) >> 1;
+
+            var y = 1L << (fractionBits - shift);
+
+            // 牛顿迭代
+            for (var i = 0; i < 2; i++) {
+                var y2 = FastMul(y, y, fractionBits, fractionalPartMask);
+                var term = FastMul(x, y2, fractionBits, fractionalPartMask);
+                y = FastMul(y, ((3L << fractionBits) - term) >> 1, fractionBits, fractionalPartMask);
+            }
+
+            return y;
+        }
+
         /// <summary>
         /// 基于 Padé [3/3] 近似的高精度 Exp 函数 (e^x)。
         /// </summary>
@@ -220,25 +239,25 @@ namespace Gal.Core {
             // k = round(x / ln2) = floor(x / ln2 + 0.5)
             // 在定点数中，这通过乘法实现: k_raw = (x_raw * invLn2_raw) >> fractionBits
             // 加 halfOne 是为了实现 round
-            long k = (FastMul(x, invLn2, fractionBits, fractionalPartMask) + halfOne) >> fractionBits;
+            var k = (FastMul(x, invLn2, fractionBits, fractionalPartMask) + halfOne) >> fractionBits;
 
             // r = x - k * ln(2)
-            long r = x - (k * ln2);
+            var r = x - (k * ln2);
 
             // --- 3. Padé [3/3] 近似计算 e^r ---
             // 我们计算 r^2
-            long r2 = FastMul(r, r, fractionBits, fractionalPartMask);
+            var r2 = FastMul(r, r, fractionBits, fractionalPartMask);
 
             // U = r * ( (1/120 * r^2) + 1/2 )
-            long u_inner = FastMul(r2, padeC3, fractionBits, fractionalPartMask) + halfOne;
-            long u = FastMul(r, u_inner, fractionBits, fractionalPartMask);
+            var u_inner = FastMul(r2, padeC3, fractionBits, fractionalPartMask) + halfOne;
+            var u = FastMul(r, u_inner, fractionBits, fractionalPartMask);
 
             // V = (1/10 * r^2) + 1
-            long v = FastMul(r2, padeC2, fractionBits, fractionalPartMask) + one;
+            var v = FastMul(r2, padeC2, fractionBits, fractionalPartMask) + one;
 
             // e^r = (V + U) / (V - U)
             // 注意：由于 r 范围极小 (abs < 0.347)，V-U 永远大于 0
-            long er = Div(v + u, v - u, fractionBits);
+            var er = Div(v + u, v - u, fractionBits);
 
             // --- 4. 重组结果: e^x = e^r * 2^k ---
             if (k == 0) return er;
