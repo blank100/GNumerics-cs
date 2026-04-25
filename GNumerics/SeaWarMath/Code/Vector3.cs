@@ -246,9 +246,18 @@ namespace SeaWar.Mathematics {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Angle(Vector3 from, Vector3 to) {
             var denom = from.SqrMagnitude * to.SqrMagnitude;
-            if (denom < GMath.NormalizeEpsilon) return 0;
-            var num = GMath.Sqrt(denom);
-            return num < GMath.LooseTolerance ? 0 : GMath.Acos(GMath.Clamp(Dot(from, to) / num, -1, 1)) * GMath.Rad2Deg;
+
+            // 用平方epsilon（非常关键）
+            if (denom < GMath.NormalizeEpsilon * GMath.NormalizeEpsilon) return 0;
+
+            var inv = GMath.InvSqrt(denom);
+
+            var cos = Dot(from, to) * inv;
+
+            // Clamp避免acos NaN
+            cos = GMath.Clamp(cos, -GMath.One, GMath.One);
+
+            return GMath.Acos(cos) * GMath.Rad2Deg;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
