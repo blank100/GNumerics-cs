@@ -232,13 +232,14 @@ namespace Gal.Core {
         public static NumericType operator *(NumericType a, int b) => new(Fixed64Utils.FastMul(a._raw, (long)b << FRACTION_BITS, FRACTION_BITS, FRACTIONAL_PART_MASK));
 
         /// 有越界风险,当值很小时可以使用
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumericType FastMul(NumericType a, int b) => new(a._raw * b);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumericType operator *(int a, NumericType b) => new(Fixed64Utils.FastMul((long)a << FRACTION_BITS, b._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
+
         /// 有越界风险,当值很小时可以使用
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumericType FastMul(int a, NumericType b) => new(a * b._raw);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -482,7 +483,7 @@ namespace Gal.Core {
             ToString(string format, IFormatProvider formatProvider) => ((double)this).ToString(format, formatProvider);
 
         public class Comparer : IComparer<NumericType> {
-            public static readonly Comparer Instance = new ();
+            public static readonly Comparer Instance = new();
 
             private Comparer() {
             }

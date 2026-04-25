@@ -6,7 +6,7 @@ namespace SeaWar.Mathematics {
     /// </summary>
     /// <author>gouanlin</author>
     [Serializable]
-    public struct Vector3 {
+    public struct Vector3 : IEquatable<Vector3>, IFormattable {
         public Single x, y, z;
 
         public Single this[int index] {
@@ -79,8 +79,7 @@ namespace SeaWar.Mathematics {
             var tarMag = target.Magnitude;
 
             // --- 1. 处理零向量（必须提前）
-            if (curMag < Math.NormalizeEpsilon || tarMag < Math.NormalizeEpsilon)
-            {
+            if (curMag < Math.NormalizeEpsilon || tarMag < Math.NormalizeEpsilon) {
                 return MoveTowards(current, target, maxMagnitudeDelta);
             }
 
@@ -102,22 +101,18 @@ namespace SeaWar.Mathematics {
             var sinAngle = Math.Sin(angle);
 
             Vector3 newDir;
-            if (sinAngle > Math.NormalizeEpsilon)
-            {
+            if (sinAngle > Math.NormalizeEpsilon) {
                 var coeff0 = Math.Sin((1 - t) * angle) / sinAngle;
                 var coeff1 = Math.Sin(t * angle) / sinAngle;
                 newDir = from * coeff0 + to * coeff1;
-            }
-            else
-            {
+            } else {
                 newDir = to;
             }
 
             // --- 5. 目标长度（不直接用scalar MoveTowards）
             var newMag = curMag;
 
-            if (Math.Abs(tarMag - curMag) > Math.NormalizeEpsilon)
-            {
+            if (Math.Abs(tarMag - curMag) > Math.NormalizeEpsilon) {
                 var delta = tarMag - curMag;
                 var maxDelta = maxMagnitudeDelta;
 

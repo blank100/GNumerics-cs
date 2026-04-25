@@ -53,7 +53,7 @@ namespace SeaWar.Mathematics {
             var num1 = target.x - current.x;
             var num2 = target.y - current.y;
             var d = num1 * num1 + num2 * num2;
-            if (d == 0 || maxDistanceDelta >= 0 && d <= maxDistanceDelta * maxDistanceDelta) return target;
+            if (d == 0 || d <= maxDistanceDelta * maxDistanceDelta) return target;
             var num3 = Math.Sqrt(d);
             return new(current.x + num1 / num3 * maxDistanceDelta, current.y + num2 / num3 * maxDistanceDelta);
         }
@@ -73,7 +73,9 @@ namespace SeaWar.Mathematics {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get {
                 var lenSq = x * x + y * y;
-                return lenSq > Math.NormalizeEpsilon ? this * Math.InvSqrt(lenSq) : Zero;
+                if (lenSq < Math.NormalizeEpsilon) return Zero;
+                var inv = Math.InvSqrt(lenSq + Math.NormalizeEpsilon); // 用 Math.NormalizeEpsilon 防止除0
+                return this * inv;
             }
         }
 
@@ -129,7 +131,7 @@ namespace SeaWar.Mathematics {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Angle(Vector2 from, Vector2 to) {
             var num = Math.Sqrt(from.SqrMagnitude * to.SqrMagnitude);
-            return num < Math.LooseTolerance ? 0 : Math.Acos(Math.Clamp(Dot(from, to) / num, -1, 1)) * Math.Rad2Deg;
+            return num < Math.NormalizeEpsilon ? 0 : Math.Acos(Math.Clamp(Dot(from, to) / num, -1, 1)) * Math.Rad2Deg;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -249,8 +251,8 @@ namespace SeaWar.Mathematics {
                 outputX = originalTarget.x;
                 outputY = originalTarget.y;
 
-                currentVelocity.x = (outputX - originalTarget.x) / deltaTime;
-                currentVelocity.y = (outputY - originalTarget.y) / deltaTime;
+                currentVelocity.x = (outputX - current.x) / deltaTime;
+                currentVelocity.y = (outputY - current.y) / deltaTime;
             }
 
             return new Vector2(outputX, outputY);

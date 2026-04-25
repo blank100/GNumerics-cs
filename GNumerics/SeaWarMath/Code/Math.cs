@@ -17,6 +17,9 @@ public static class Math {
     public static readonly Single Dot01 = Single.Parse("0.01");
     public static readonly Single Dot001 = Single.Parse("0.001");
     public static readonly Single Dot0001 = Single.Parse("0.0001");
+    public static readonly Single Dot999999 = Single.Parse("0.999999");
+
+    public static readonly Single I180 = 180;
 #else
     public const Single MaxSingle = Single.MaxValue;
     public const Single MinSingle = Single.MinValue;
@@ -29,10 +32,15 @@ public static class Math {
     public const Single Dot01 = 0.01f;
     public const Single Dot001 = 0.001f;
     public const Single Dot0001 = 0.0001f;
+    public const Single Dot999999 = 0.999999f;
+
+     public const Single I180 = 180f;
 #endif
 
 #if USE_FIXED64
     // ===== 几何通用 =====
+    public static readonly Single Epsilon = Single.Epsilon;
+
     public static readonly Single Tolerance = Single.FromRaw(1L << 8); // ≈ 6e-8
     public static readonly Single TightTolerance = Single.FromRaw(1L << 6); // ≈ 1.5e-8
     public static readonly Single LooseTolerance = Single.FromRaw(1L << 10); // ≈ 2.4e-7
@@ -41,21 +49,25 @@ public static class Math {
     public static readonly Single NormalizeEpsilon = Single.FromRaw(1L << 10);
 #else
     // ===== 几何通用 =====
-    public static readonly Single Tolerance = Single.FromRaw(1L << 8); // ≈ 6e-8
-    public static readonly Single TightTolerance = Single.FromRaw(1L << 6); // ≈ 1.5e-8
-    public static readonly Single LooseTolerance = Single.FromRaw(1L << 10); // ≈ 2.4e-7
+    public static readonly Single Tolerance = 6e-8f;
+    public static readonly Single TightTolerance = 1.5e-8f;
+    public static readonly Single LooseTolerance = 2.4e-7f;
 
     // ===== 向量 / 归一化 =====
     public static readonly Single NormalizeEpsilon = 1.1754944E-38f;
 #endif
 
 #if USE_FIXED64
+    public static readonly Single PI = Single.PI;
+
     public static readonly Single Deg2Rad = Single.Deg2Rad;
     public static readonly Single Rad2Deg = Single.Rad2Deg;
 
     public static readonly Double Deg2RadDouble = Double.Deg2Rad;
     public static readonly Double Rad2DegDouble = Double.Rad2Deg;
 #else
+    public const Single PI = (Single)System.Math.PI;
+
     public const Single Deg2Rad = 0.01745329251994329576f;
     public const Single Rad2Deg = 57.2957795130823208767f;
 
@@ -64,7 +76,7 @@ public static class Math {
 #endif
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Single Min(Single a, Single b) => a < b ? a : b;
+    public static Single Min(Single a, Single b) => Single.Min(a,b);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Single Max(Single a, Single b) => a > b ? a : b;
@@ -84,6 +96,15 @@ public static class Math {
         return Single.Sign(v);
 #else
         return MathF.Sign(v);
+#endif
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Single CopySign(Single x, Single y) {
+#if USE_FIXED64
+        return Single.CopySign(x, y);
+#else
+        return System.MathF.CopySign(x,y);
 #endif
     }
 

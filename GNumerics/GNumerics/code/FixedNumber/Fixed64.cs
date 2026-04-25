@@ -338,9 +338,9 @@ namespace Gal.Core {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumericType Truncate(NumericType value) {
             unchecked {
-                long raw = value._raw;
+                var raw = value._raw;
                 // 如果 raw < 0，offset = FRACTIONAL_PART_MASK；否则 offset = 0
-                long offset = (raw >> 63) & (long)FRACTIONAL_PART_MASK;
+                var offset = (raw >> 63) & (long)FRACTIONAL_PART_MASK;
                 // 对于负数，加上偏移量后再屏蔽，能实现向零取整
                 return new((raw + offset) & (long)INTEGER_PART_MASK);
             }
@@ -364,19 +364,37 @@ namespace Gal.Core {
         public static NumericType Round(NumericType value) => new(Fixed64Utils.Round(value._raw, OneRawValue, INTEGER_PART_MASK, FRACTIONAL_PART_MASK));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static NumericType Clamp(NumericType value, NumericType min, NumericType max) => value._raw < min._raw ? min : value._raw > max._raw ? max : value;
+        public static NumericType Clamp(NumericType value, NumericType min, NumericType max) => Max(min, Min(max, value));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static NumericType Clamp01(NumericType value) => value._raw < Zero._raw ? Zero : value._raw > OneRawValue ? One : value;
+        public static NumericType Clamp01(NumericType value) => Max(Zero, Min(One, value));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static NumericType Min(NumericType a, NumericType b) => a._raw <= b._raw ? a : b;
+        public static NumericType Min(NumericType a, NumericType b)
+        {
+            var x = a._raw;
+            var y = b._raw;
+            var mask = (x - y) >> 63;
+            return new(y ^ ((x ^ y) & mask));
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static NumericType Max(NumericType a, NumericType b) => a._raw >= b._raw ? a : b;
+        public static NumericType Max(NumericType a, NumericType b)
+        {
+            var x = a._raw;
+            var y = b._raw;
+            var mask = (x - y) >> 63;
+            return new(x ^ ((x ^ y) & mask));
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Sign(NumericType value) => value._raw < 0 ? -1 : value._raw > 0 ? 1 : 0;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static NumericType CopySign(NumericType x, NumericType y) {
+            var signMask = 1L << 63;
+            return FromRaw((x.Raw & ~signMask) | (y.Raw & signMask));
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumericType Sqrt(NumericType value) => new(Fixed64Utils.Sqrt(value._raw, FRACTION_BITS));
