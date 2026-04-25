@@ -1,5 +1,6 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace Gal.Core {
     /// <summary>
@@ -10,69 +11,76 @@ namespace Gal.Core {
         public static long FromChars(ReadOnlySpan<char> chars, int fractionBits) {
             if (chars.IsEmpty) return 0;
 
+            ref var ptr = ref MemoryMarshal.GetReference(chars);
             int i = 0, l = chars.Length;
-            int sign = 1;
+            var sign = 1;
 
             // 处理符号位
-            char n = chars[i];
-            if (n == '-') {
+            var c = Unsafe.Add(ref ptr, i);
+            if (c == '-') {
                 sign = -1;
                 i++;
-            } else if (n == '+') {
+            } else if (c == '+') {
                 i++;
             }
 
             // 整数部分 (iPart)
             long iPart = 0;
-            // 整数部分能允许的最大值 (防止 iPart << fractionBits 溢出)
-            long iPartLimit = (long.MaxValue >> fractionBits);
+            var iPartLimit = long.MaxValue >> fractionBits;
 
             while (i < l) {
-                n = chars[i];
-                if ((uint)(n - '0') > 9) {
-                    if (n != '.') throw new FormatException();
-                    break; // 快速判断是否为数字
+                c = Unsafe.Add(ref ptr, i);
+                var digit = (uint)(c - '0');
+                if (digit > 9) {
+                    if (c != '.') throw new FormatException();
+                    break;
                 }
 
-                iPart = iPart * 10 + (n - '0');
-                if (iPart > iPartLimit) throw new OverflowException("Integer part overflow");
+                // 必须在乘法之前检查，否则 iPart * 10 可能已经溢出 long 导致数据损坏
+                if (iPart > (iPartLimit - digit) / 10) throw new OverflowException("Integer part overflow");
+
+                iPart = iPart * 10 + digit;
                 i++;
             }
 
             // 如果没有小数部分，直接返回
-            if (i >= l || chars[i] != '.') {
-                return (iPart << fractionBits) * sign;
-            }
+            if (i >= l || Unsafe.Add(ref ptr, i) != '.') return (iPart << fractionBits) * sign;
 
             i++; // 跳过 '.'
 
-            // 3. 解析小数部分 (fPart)
+            // 解析小数部分 (fPart)
             long fPart = 0;
             long exp = 1;
+            var fPartLimit = Math.Min(long.MaxValue / 10 - 9, iPartLimit);
 
-            // 关键优化：预计算 fPart 能够安全左移的最大限额
-            // 同时也受限于 long.MaxValue / 10 以防止 fPart * 10 溢出
-            long fPartLimit = Math.Min(long.MaxValue / 10 - 9, iPartLimit);
+            // 预计算“有效精度阈值”。
+            // 当 exp > 9 << fractionBits 时，任何数字 (0~9) 左移 fractionBits 后除以 exp 都等于 0。
+            // 一旦超过此阈值，继续解析小数位毫无意义，直接跳出即可。
+            // 注意：9L << 60 会溢出，所以针对大 fractionBits 做了保护
+            var maxExp = fractionBits < 60 ? (9L << fractionBits) : long.MaxValue / 10;
 
             while (i < l) {
-                n = chars[i];
-                uint digit = (uint)(n - '0');
+                c = Unsafe.Add(ref ptr, i);
+                var digit = (uint)(c - '0');
                 if (digit > 9) throw new FormatException();
 
-                // 只需一次判断：既保证了下一次 fPart 不溢出，也保证了后续左移安全
+                // 超出精度贡献范围，直接跳出 (大幅减少长尾小数的无用计算)
+                if (exp > maxExp) break;
                 if (fPart > fPartLimit) break;
 
                 fPart = fPart * 10 + digit;
                 exp *= 10;
                 i++;
-
-                // 预防 exp 溢出（通常 fPartLimit 远早于 exp 溢出，此步可作为安全兜底）
-                if (exp > long.MaxValue / 10) break;
             }
 
-            // 4. 合并结果：利用 (fPart << fractionBits) / exp
-            // 由于循环内做了 fPartLimit 限制，这里的左移是绝对安全的
-            return sign * ((iPart << fractionBits) + ((fPart << fractionBits) / exp));
+            // 合并结果
+            var intPartShifted = iPart << fractionBits;
+            var fracPartShifted = (fPart << fractionBits) / exp;
+
+            // 整数部分和小数部分相加可能导致整体溢出 (例如 iPart 接近极限，fPart 向上进位)
+            if (intPartShifted > long.MaxValue - fracPartShifted) throw new OverflowException("Value overflow");
+
+            return sign * (intPartShifted + fracPartShifted);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
