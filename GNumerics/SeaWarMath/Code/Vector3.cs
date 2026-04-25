@@ -53,6 +53,14 @@ namespace SeaWar.Mathematics {
         public static Vector3 LerpUnclamped(Vector3 a, Vector3 b, Single t) =>
             new(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, a.z + (b.z - a.z) * t);
 
+        public static Vector3 Slerp(Vector3 a, Vector3 b, Single t) {
+            throw new NotImplementedException();
+        }
+
+        public static Vector3 SlerpUnclamped(Vector3 a, Vector3 b, float t) {
+            throw new NotImplementedException();
+        }
+
         /// 如果调用的比较频繁,建议外部缓存两向量的距离后手动实现
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 MoveTowards(Vector3 current, Vector3 target, Single maxDistanceDelta) {
