@@ -166,91 +166,91 @@ public class Vector2Tests {
             current = Vector2.SmoothDamp(current, target, ref velocity, (Single)0.3f, (Single)100f, (Single)0.016f);
         }
 
-        Assert.True((Single)Math.Abs(current.x - (Single)10f) < 0.01f);
+        Assert.True(Math.Abs((double)current.x - 10f) < 0.01f);
     }
 
-    // [Fact]
-    // public void SmoothDamp_NoOvershoot()
-    // {
-    //     var current = new Vector2(0, 0);
-    //     var target = new Vector2(1, 0);
-    //     var velocity = Vector2.Zero;
-    //
-    //     for (int i = 0; i < 10; i++)
-    //     {
-    //         current = Vector2.SmoothDamp(current, target, ref velocity, 0.1f, 100f, 0.016f);
-    //     }
-    //
-    //     Assert.True(current.x <= 1.0001f);
-    // }
-    //
-    // [Fact]
-    // public void SmoothDamp_StableAtTarget()
-    // {
-    //     var current = new Vector2(5, 5);
-    //     var target = new Vector2(5, 5);
-    //     var velocity = Vector2.Zero;
-    //
-    //     var result = Vector2.SmoothDamp(current, target, ref velocity, 0.3f, 100f, 0.016f);
-    //
-    //     Assert.Equal(5f, result.x, EPS);
-    //     Assert.Equal(5f, result.y, EPS);
-    // }
-    //
-    // [Fact]
-    // public void SmoothDamp_MaxSpeedLimit()
-    // {
-    //     var current = new Vector2(0, 0);
-    //     var target = new Vector2(100, 0);
-    //     var velocity = Vector2.Zero;
-    //
-    //     var result = Vector2.SmoothDamp(current, target, ref velocity, 0.3f, 1f, 0.016f);
-    //
-    //     // 每帧移动应该非常小（被 maxSpeed 限制）
-    //     Assert.True(result.x < 1f);
-    // }
-    //
-    // #endregion
-    //
-    // #region Distance
-    //
-    // [Fact]
-    // public void Distance_Correct()
-    // {
-    //     var a = new Vector2(0, 0);
-    //     var b = new Vector2(3, 4);
-    //
-    //     var d = Vector2.Distance(a, b);
-    //
-    //     Assert.True(Math.Abs(d - 5f) < EPS);
-    // }
-    //
-    // #endregion
-    //
-    // #region Operators
-    //
-    // [Fact]
-    // public void Operator_Add()
-    // {
-    //     var a = new Vector2(1, 2);
-    //     var b = new Vector2(3, 4);
-    //
-    //     var c = a + b;
-    //
-    //     Assert.Equal(4f, c.x);
-    //     Assert.Equal(6f, c.y);
-    // }
-    //
-    // [Fact]
-    // public void Operator_MulScalar()
-    // {
-    //     var v = new Vector2(2, 3);
-    //
-    //     var r = v * 2;
-    //
-    //     Assert.Equal(4f, r.x);
-    //     Assert.Equal(6f, r.y);
-    // }
+    [Fact]
+    public void SmoothDamp_NoOvershoot()
+    {
+        var current = new Vector2(0, 0);
+        var target = new Vector2(1, 0);
+        var velocity = Vector2.Zero;
+
+        for (int i = 0; i < 10; i++)
+        {
+            current = Vector2.SmoothDamp(current, target, ref velocity, (Single)0.1f, (Single)100f, (Single)0.016f);
+        }
+
+        Assert.True((double)current.x <= 1.0001f);
+    }
+
+    [Fact]
+    public void SmoothDamp_StableAtTarget()
+    {
+        var current = new Vector2(5, 5);
+        var target = new Vector2(5, 5);
+        var velocity = Vector2.Zero;
+
+        var result = Vector2.SmoothDamp(current, target, ref velocity, (Single)0.3f, (Single)100f, (Single)0.016f);
+
+        Assert.Equal(5, (double)result.x, 5);
+        Assert.Equal(5, (double)result.y, 5);
+    }
+
+    [Fact]
+    public void SmoothDamp_MaxSpeedLimit()
+    {
+        var current = new Vector2(0, 0);
+        var target = new Vector2(100, 0);
+        var velocity = Vector2.Zero;
+
+        var result = Vector2.SmoothDamp(current, target, ref velocity, (Single)0.3f, (Single)1f, (Single)0.016f);
+
+        // 每帧移动应该非常小（被 maxSpeed 限制）
+        Assert.True((double)result.x < 1f);
+    }
+
+    #endregion
+
+    #region Distance
+
+    [Fact]
+    public void Distance_Correct()
+    {
+        var a = new Vector2(0, 0);
+        var b = new Vector2(3, 4);
+
+        var d = Vector2.Distance(a, b);
+
+        Assert.True(Math.Abs((double)d - 5f) < EPS);
+    }
+
+    #endregion
+
+    #region Operators
+
+    [Fact]
+    public void Operator_Add()
+    {
+        var a = new Vector2(1, 2);
+        var b = new Vector2(3, 4);
+
+        var c = a + b;
+
+        Assert.Equal(4f, (double)c.x);
+        Assert.Equal(6f, (double)c.y);
+    }
+
+    [Fact]
+    public void Operator_MulScalar()
+    {
+        var v = new Vector2(2, 3);
+
+        var r = v * 2;
+
+        Assert.Equal(4f, (double)r.x);
+        Assert.Equal(6f, (double)r.y);
+    }
 
     #endregion
 }

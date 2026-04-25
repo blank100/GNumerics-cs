@@ -45,7 +45,7 @@ namespace SeaWar.Mathematics {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 Lerp(Vector3 a, Vector3 b, Single t) {
-            t = Math.Clamp(t, 0, 1);
+            t = GMath.Clamp(t, 0, 1);
             return new(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, a.z + (b.z - a.z) * t);
         }
 
@@ -61,7 +61,7 @@ namespace SeaWar.Mathematics {
             var tz = target.z - current.z;
             var d = tx * tx + ty * ty + tz * tz;
             if (d == 0 || maxDistanceDelta >= 0 && d <= maxDistanceDelta * maxDistanceDelta) return target;
-            var length = Math.Sqrt(d);
+            var length = GMath.Sqrt(d);
             return new(
                 current.x + tx / length * maxDistanceDelta,
                 current.y + ty / length * maxDistanceDelta,
@@ -79,7 +79,7 @@ namespace SeaWar.Mathematics {
             var tarMag = target.Magnitude;
 
             // --- 1. 处理零向量（必须提前）
-            if (curMag < Math.NormalizeEpsilon || tarMag < Math.NormalizeEpsilon) {
+            if (curMag < GMath.NormalizeEpsilon || tarMag < GMath.NormalizeEpsilon) {
                 return MoveTowards(current, target, maxMagnitudeDelta);
             }
 
@@ -88,22 +88,22 @@ namespace SeaWar.Mathematics {
             var to = target / tarMag;
 
             var dot = Dot(from, to);
-            dot = Math.Clamp(dot, -Math.One, Math.One);
+            dot = GMath.Clamp(dot, -GMath.One, GMath.One);
 
-            var angle = Math.Acos(dot);
+            var angle = GMath.Acos(dot);
 
             // --- 3. 限制旋转
-            var t = (angle > Math.NormalizeEpsilon)
-                ? Math.Min(Math.One, maxRadiansDelta / angle)
-                : Math.One;
+            var t = (angle > GMath.NormalizeEpsilon)
+                ? GMath.Min(GMath.One, maxRadiansDelta / angle)
+                : GMath.One;
 
             // --- 4. Slerp方向
-            var sinAngle = Math.Sin(angle);
+            var sinAngle = GMath.Sin(angle);
 
             Vector3 newDir;
-            if (sinAngle > Math.NormalizeEpsilon) {
-                var coeff0 = Math.Sin((1 - t) * angle) / sinAngle;
-                var coeff1 = Math.Sin(t * angle) / sinAngle;
+            if (sinAngle > GMath.NormalizeEpsilon) {
+                var coeff0 = GMath.Sin((1 - t) * angle) / sinAngle;
+                var coeff1 = GMath.Sin(t * angle) / sinAngle;
                 newDir = from * coeff0 + to * coeff1;
             } else {
                 newDir = to;
@@ -112,14 +112,14 @@ namespace SeaWar.Mathematics {
             // --- 5. 目标长度（不直接用scalar MoveTowards）
             var newMag = curMag;
 
-            if (Math.Abs(tarMag - curMag) > Math.NormalizeEpsilon) {
+            if (GMath.Abs(tarMag - curMag) > GMath.NormalizeEpsilon) {
                 var delta = tarMag - curMag;
                 var maxDelta = maxMagnitudeDelta;
 
-                if (Math.Abs(delta) <= maxDelta)
+                if (GMath.Abs(delta) <= maxDelta)
                     newMag = tarMag;
                 else
-                    newMag = curMag + Math.Sign(delta) * maxDelta;
+                    newMag = curMag + GMath.Sign(delta) * maxDelta;
             }
 
             var rotated = newDir * newMag;
@@ -144,12 +144,12 @@ namespace SeaWar.Mathematics {
             Single maxSpeed,
             Single deltaTime
         ) {
-            smoothTime = Math.Max(Math.Dot0001, smoothTime);
+            smoothTime = GMath.Max(GMath.Dot0001, smoothTime);
 
-            var omega = Math.Two / smoothTime;
+            var omega = GMath.Two / smoothTime;
 
             var x = omega * deltaTime;
-            var exp = Math.One / (Math.One + x + _dot48 * x * x + _dot235 * x * x * x);
+            var exp = GMath.One / (GMath.One + x + _dot48 * x * x + _dot235 * x * x * x);
 
             var change = current - target;
             var maxChange = maxSpeed * smoothTime;
@@ -158,7 +158,7 @@ namespace SeaWar.Mathematics {
             var maxChangeSq = maxChange * maxChange;
             var sqrmag = change.SqrMagnitude;
             if (sqrmag > maxChangeSq) {
-                var mag = Math.Sqrt(sqrmag);
+                var mag = GMath.Sqrt(sqrmag);
                 change = change / mag * maxChange;
             }
 
@@ -188,8 +188,8 @@ namespace SeaWar.Mathematics {
         public Vector3 Normalized {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get {
-                var m = Math.Sqrt(x * x + y * y + z * z);
-                return m > Math.NormalizeEpsilon ? this / m : Zero;
+                var m = GMath.Sqrt(x * x + y * y + z * z);
+                return m > GMath.NormalizeEpsilon ? this / m : Zero;
             }
         }
 
@@ -197,7 +197,7 @@ namespace SeaWar.Mathematics {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get {
                 var lenSq = x * x + y * y + z * z;
-                return lenSq > Math.NormalizeEpsilon ? this * Math.InvSqrt(lenSq) : Zero;
+                return lenSq > GMath.NormalizeEpsilon ? this * GMath.InvSqrt(lenSq) : Zero;
             }
         }
 
@@ -215,7 +215,7 @@ namespace SeaWar.Mathematics {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 Project(Vector3 vector, Vector3 onNormal) {
             var num1 = Dot(onNormal, onNormal);
-            if (num1 < Math.NormalizeEpsilon) return Zero;
+            if (num1 < GMath.NormalizeEpsilon) return Zero;
             var num2 = Dot(vector, onNormal);
             return new Vector3(
                 onNormal.x * num2 / num1,
@@ -227,7 +227,7 @@ namespace SeaWar.Mathematics {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 ProjectOnPlane(Vector3 vector, Vector3 planeNormal) {
             var num1 = Dot(planeNormal, planeNormal);
-            if (num1 < Math.NormalizeEpsilon) return vector;
+            if (num1 < GMath.NormalizeEpsilon) return vector;
             var num2 = Dot(vector, planeNormal);
             return new Vector3(
                 vector.x - planeNormal.x * num2 / num1,
@@ -238,16 +238,16 @@ namespace SeaWar.Mathematics {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Angle(Vector3 from, Vector3 to) {
-            var num = Math.Sqrt(from.SqrMagnitude * to.SqrMagnitude);
-            return num < Math.LooseTolerance ? 0 : Math.Acos(Math.Clamp(Dot(from, to) / num, -1, 1)) * Math.Rad2Deg;
+            var num = GMath.Sqrt(from.SqrMagnitude * to.SqrMagnitude);
+            return num < GMath.LooseTolerance ? 0 : GMath.Acos(GMath.Clamp(Dot(from, to) / num, -1, 1)) * GMath.Rad2Deg;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single FastAngle(Vector3 from, Vector3 to) {
             var denom = from.SqrMagnitude * to.SqrMagnitude;
-            if (denom < Math.NormalizeEpsilon) return 0;
-            var inv = Math.InvSqrt(denom);
-            return Math.Acos(Math.Clamp(Dot(from, to) * inv, -1, 1)) * Math.Rad2Deg;
+            if (denom < GMath.NormalizeEpsilon) return 0;
+            var inv = GMath.InvSqrt(denom);
+            return GMath.Acos(GMath.Clamp(Dot(from, to) * inv, -1, 1)) * GMath.Rad2Deg;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -256,7 +256,7 @@ namespace SeaWar.Mathematics {
             var n1 = from.y * to.z - from.z * to.y;
             var n2 = from.z * to.x - from.x * to.z;
             var n3 = from.x * to.y - from.y * to.x;
-            Single num5 = Math.Sign(axis.x * n1 + axis.y * n2 + axis.z * n3);
+            Single num5 = GMath.Sign(axis.x * n1 + axis.y * n2 + axis.z * n3);
             return angle * num5;
         }
 
@@ -266,7 +266,7 @@ namespace SeaWar.Mathematics {
             var n1 = from.y * to.z - from.z * to.y;
             var n2 = from.z * to.x - from.x * to.z;
             var n3 = from.x * to.y - from.y * to.x;
-            Single num5 = Math.Sign(axis.x * n1 + axis.y * n2 + axis.z * n3);
+            Single num5 = GMath.Sign(axis.x * n1 + axis.y * n2 + axis.z * n3);
             return angle * num5;
         }
 
@@ -275,7 +275,7 @@ namespace SeaWar.Mathematics {
             var tx = a.x - b.x;
             var ty = a.y - b.y;
             var tz = a.z - b.z;
-            return Math.Sqrt(tx * tx + ty * ty + tz * tz);
+            return GMath.Sqrt(tx * tx + ty * ty + tz * tz);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -283,17 +283,17 @@ namespace SeaWar.Mathematics {
             var tx = a.x - b.x;
             var ty = a.y - b.y;
             var tz = a.z - b.z;
-            return Math.FastSqrt(tx * tx + ty * ty + tz * tz);
+            return GMath.FastSqrt(tx * tx + ty * ty + tz * tz);
         }
 
         public readonly Single Magnitude {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => Math.Sqrt(x * x + y * y + z * z);
+            get => GMath.Sqrt(x * x + y * y + z * z);
         }
 
         public readonly Single FastMagnitude {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => Math.FastSqrt(x * x + y * y + z * z);
+            get => GMath.FastSqrt(x * x + y * y + z * z);
         }
 
         public readonly Single SqrMagnitude {
@@ -305,7 +305,7 @@ namespace SeaWar.Mathematics {
         public static Vector3 ClampMagnitude(Vector3 vector, Single maxLength) {
             var lengthSq = vector.SqrMagnitude;
             if (lengthSq <= maxLength * maxLength) return vector;
-            var length = Math.Sqrt(lengthSq);
+            var length = GMath.Sqrt(lengthSq);
             return new(vector.x / length * maxLength, vector.y / length * maxLength, vector.z / length * maxLength);
         }
 
@@ -313,7 +313,7 @@ namespace SeaWar.Mathematics {
         public static Vector3 FastClampMagnitude(Vector3 vector, Single maxLength) {
             var lengthSq = vector.SqrMagnitude;
             if (lengthSq <= maxLength * maxLength) return vector;
-            var invLen = Math.InvSqrt(lengthSq);
+            var invLen = GMath.InvSqrt(lengthSq);
             return new(vector.x * invLen * maxLength, vector.y * invLen * maxLength, vector.z * invLen * maxLength);
         }
 
@@ -352,10 +352,10 @@ namespace SeaWar.Mathematics {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector3 Min(Vector3 a, Vector3 b) => new(Math.Min(a.x, b.x), Math.Min(a.y, b.y), Math.Min(a.z, b.z));
+        public static Vector3 Min(Vector3 a, Vector3 b) => new(GMath.Min(a.x, b.x), GMath.Min(a.y, b.y), GMath.Min(a.z, b.z));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector3 Max(Vector3 a, Vector3 b) => new(Math.Max(a.x, b.x), Math.Max(a.y, b.y), Math.Max(a.z, b.z));
+        public static Vector3 Max(Vector3 a, Vector3 b) => new(GMath.Max(a.x, b.x), GMath.Max(a.y, b.y), GMath.Max(a.z, b.z));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 operator +(Vector3 a, Vector3 b) => new(a.x + b.x, a.y + b.y, a.z + b.z);

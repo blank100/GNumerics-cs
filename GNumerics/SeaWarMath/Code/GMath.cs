@@ -4,7 +4,7 @@
 ///
 /// </summary>
 /// <author>gouanlin</author>
-public static class Math {
+public static class GMath {
 #if USE_FIXED64
     public static readonly Single MaxSingle = Single.MaxValue;
     public static readonly Single MinSingle = Single.MinValue;

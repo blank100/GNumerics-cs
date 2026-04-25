@@ -8,5 +8,7 @@
   &lt;Or&gt;&#xD;
     &lt;Project Location="D:\gitee\GNumerics-cs\GNumerics\GNumerics.Test" Presentation="&amp;lt;GNumerics.Test&amp;gt;" /&gt;&#xD;
     &lt;ProjectFile&gt;91CBF7E2-18B0-4AB3-94B8-3D9F9A69E4FF/d:gpt/f:Vector2Tests.cs&lt;/ProjectFile&gt;&#xD;
+    &lt;ProjectFile&gt;91CBF7E2-18B0-4AB3-94B8-3D9F9A69E4FF/d:claude/f:Vector2Tests.cs&lt;/ProjectFile&gt;&#xD;
+    &lt;ProjectFile&gt;91CBF7E2-18B0-4AB3-94B8-3D9F9A69E4FF/d:glm/f:Vector2Tests.cs&lt;/ProjectFile&gt;&#xD;
   &lt;/Or&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

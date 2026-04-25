@@ -23,7 +23,7 @@ namespace SeaWar.Mathematics {
 
         public static Quaternion Inverse(Quaternion rotation) {
             var lengthSq = Dot(rotation, rotation);
-            if (lengthSq < Math.NormalizeEpsilon) return Identity;
+            if (lengthSq < GMath.NormalizeEpsilon) return Identity;
 
             var invLengthSq = 1 / lengthSq;
             return new Quaternion(
@@ -35,7 +35,7 @@ namespace SeaWar.Mathematics {
         }
 
         public static Quaternion Slerp(Quaternion a, Quaternion b, Single t) =>
-            SlerpUnclamped(a, b, Math.Clamp(t, 0, 1));
+            SlerpUnclamped(a, b, GMath.Clamp(t, 0, 1));
 
         public static readonly Single CloseThreshold = Single.Parse("0.9995");
 
@@ -59,10 +59,10 @@ namespace SeaWar.Mathematics {
             }
 
             // 球面线性插值
-            var theta = Math.Acos(dot);
-            var sinTheta = Math.Sin(theta);
-            var wa = Math.Sin((1 - t) * theta) / sinTheta;
-            var wb = Math.Sin(t * theta) / sinTheta;
+            var theta = GMath.Acos(dot);
+            var sinTheta = GMath.Sin(theta);
+            var wa = GMath.Sin((1 - t) * theta) / sinTheta;
+            var wb = GMath.Sin(t * theta) / sinTheta;
 
             return new Quaternion(
                 wa * a.x + wb * b.x,
@@ -73,7 +73,7 @@ namespace SeaWar.Mathematics {
         }
 
         public static Quaternion Lerp(Quaternion a, Quaternion b, Single t) =>
-            LerpUnclamped(a, b, Math.Clamp(t, 0, 1));
+            LerpUnclamped(a, b, GMath.Clamp(t, 0, 1));
 
         public static Quaternion LerpUnclamped(Quaternion a, Quaternion b, Single t) {
             var dot = Dot(a, b);
@@ -100,14 +100,14 @@ namespace SeaWar.Mathematics {
 
         public static Quaternion AngleAxis(Single angle, Vector3 axis) {
             axis = axis.FastNormalized;
-            var halfAngle = angle * Math.Dot5 * Math.PI / Math.I180;
-            var s = Math.Sin(halfAngle);
+            var halfAngle = angle * GMath.Dot5 * GMath.PI / GMath.I180;
+            var s = GMath.Sin(halfAngle);
 
             return new Quaternion(
                 axis.x * s,
                 axis.y * s,
                 axis.z * s,
-                Math.Cos(halfAngle)
+                GMath.Cos(halfAngle)
             );
         }
 
@@ -135,30 +135,30 @@ namespace SeaWar.Mathematics {
             var q = new Quaternion();
 
             if (trace > 0) {
-                var s = Math.FastSqrt(trace + 1);
-                q.w = s * Math.Dot5;
-                s = Math.Dot5 / s;
+                var s = GMath.FastSqrt(trace + 1);
+                q.w = s * GMath.Dot5;
+                s = GMath.Dot5 / s;
                 q.x = (m12 - m21) * s;
                 q.y = (m20 - m02) * s;
                 q.z = (m01 - m10) * s;
             } else if (m00 >= m11 && m00 >= m22) {
-                var s = Math.FastSqrt(1 + m00 - m11 - m22);
-                q.x = Math.Dot5 * s;
-                s = Math.Dot5 / s;
+                var s = GMath.FastSqrt(1 + m00 - m11 - m22);
+                q.x = GMath.Dot5 * s;
+                s = GMath.Dot5 / s;
                 q.y = (m01 + m10) * s;
                 q.z = (m02 + m20) * s;
                 q.w = (m12 - m21) * s;
             } else if (m11 > m22) {
-                var s = Math.FastSqrt(1 + m11 - m00 - m22);
-                q.y = Math.Dot5 * s;
-                s = Math.Dot5 / s;
+                var s = GMath.FastSqrt(1 + m11 - m00 - m22);
+                q.y = GMath.Dot5 * s;
+                s = GMath.Dot5 / s;
                 q.x = (m10 + m01) * s;
                 q.z = (m21 + m12) * s;
                 q.w = (m20 - m02) * s;
             } else {
-                var s = Math.FastSqrt(1 + m22 - m00 - m11);
-                q.z = Math.Dot5 * s;
-                s = Math.Dot5 / s;
+                var s = GMath.FastSqrt(1 + m22 - m00 - m11);
+                q.z = GMath.Dot5 * s;
+                s = GMath.Dot5 / s;
                 q.x = (m20 + m02) * s;
                 q.y = (m21 + m12) * s;
                 q.w = (m01 - m10) * s;
@@ -221,7 +221,7 @@ namespace SeaWar.Mathematics {
             );
         }
 
-        public static bool operator ==(Quaternion lhs, Quaternion rhs) => Dot(lhs, rhs) > Math.Dot999999;
+        public static bool operator ==(Quaternion lhs, Quaternion rhs) => Dot(lhs, rhs) > GMath.Dot999999;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Quaternion lhs, Quaternion rhs) => !(lhs == rhs);
@@ -235,7 +235,7 @@ namespace SeaWar.Mathematics {
 
         public static Single Angle(Quaternion a, Quaternion b) {
             var dot = Dot(a, b);
-            return Math.Acos(Math.Min(Math.Abs(dot), 1)) * 2 * Math.Rad2Deg;
+            return GMath.Acos(GMath.Min(GMath.Abs(dot), 1)) * 2 * GMath.Rad2Deg;
         }
 
         public Vector3 EulerAngles {
@@ -244,13 +244,13 @@ namespace SeaWar.Mathematics {
         }
 
         public static Quaternion Euler(Single x, Single y, Single z) {
-            var halfRad = Math.Deg2Rad * Math.Dot5;
-            var sx = Math.Sin(x * halfRad);
-            var cx = Math.Cos(x * halfRad);
-            var sy = Math.Sin(y * halfRad);
-            var cy = Math.Cos(y * halfRad);
-            var sz = Math.Sin(z * halfRad);
-            var cz = Math.Cos(z * halfRad);
+            var halfRad = GMath.Deg2Rad * GMath.Dot5;
+            var sx = GMath.Sin(x * halfRad);
+            var cx = GMath.Cos(x * halfRad);
+            var sy = GMath.Sin(y * halfRad);
+            var cy = GMath.Cos(y * halfRad);
+            var sz = GMath.Sin(z * halfRad);
+            var cz = GMath.Cos(z * halfRad);
 
             return new Quaternion(
                 sx * cy * cz + cx * sy * sz,
@@ -268,31 +268,31 @@ namespace SeaWar.Mathematics {
             // Roll (x-axis rotation)
             var sinr_cosp = 2 * (q.w * q.x + q.y * q.z);
             var cosr_cosp = 1 - 2 * (q.x * q.x + q.y * q.y);
-            euler.x = Math.Atan2(sinr_cosp, cosr_cosp) * Math.Rad2Deg;
+            euler.x = GMath.Atan2(sinr_cosp, cosr_cosp) * GMath.Rad2Deg;
 
             // Pitch (y-axis rotation)
             var sinp = 2 * (q.w * q.y - q.z * q.x);
-            if (Math.Abs(sinp) >= 1)
-                euler.y = Math.CopySign(Math.PI / 2, sinp) * Math.Rad2Deg;
+            if (GMath.Abs(sinp) >= 1)
+                euler.y = GMath.CopySign(GMath.PI / 2, sinp) * GMath.Rad2Deg;
             else
-                euler.y = Math.Asin(sinp) * Math.Rad2Deg;
+                euler.y = GMath.Asin(sinp) * GMath.Rad2Deg;
 
             // Yaw (z-axis rotation)
             var siny_cosp = 2 * (q.w * q.z + q.x * q.y);
             var cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z);
-            euler.z = Math.Atan2(siny_cosp, cosy_cosp) * Math.Rad2Deg;
+            euler.z = GMath.Atan2(siny_cosp, cosy_cosp) * GMath.Rad2Deg;
 
             return euler;
         }
 
         public void ToAngleAxis(out Single angle, out Vector3 axis) {
             var q = this;
-            if (Math.Abs(q.w) > 1) q = Normalize(q);
+            if (GMath.Abs(q.w) > 1) q = Normalize(q);
 
-            angle = 2 * Math.Acos(q.w) * Math.Rad2Deg;
-            var den = Math.Sqrt(1 - q.w * q.w);
+            angle = 2 * GMath.Acos(q.w) * GMath.Rad2Deg;
+            var den = GMath.Sqrt(1 - q.w * q.w);
 
-            if (den > Math.Dot0001) {
+            if (den > GMath.Dot0001) {
                 axis = new Vector3(q.x / den, q.y / den, q.z / den);
             } else {
                 axis = new Vector3(1, 0, 0);
@@ -305,14 +305,14 @@ namespace SeaWar.Mathematics {
 
             var dot = Vector3.Dot(fromDirection, toDirection);
 
-            if (dot > Math.Dot999999) {
+            if (dot > GMath.Dot999999) {
                 this = Identity;
                 return;
             }
 
-            if (dot < -Math.Dot999999) {
+            if (dot < -GMath.Dot999999) {
                 var axis = Vector3.Cross(Vector3.Right, fromDirection);
-                if (Vector3.Dot(axis, axis) < Math.NormalizeEpsilon)
+                if (Vector3.Dot(axis, axis) < GMath.NormalizeEpsilon)
                 axis = Vector3.Cross(Vector3.Up, fromDirection);
 
                 axis = axis.FastNormalized;
@@ -321,13 +321,13 @@ namespace SeaWar.Mathematics {
             }
 
             var cross = Vector3.Cross(fromDirection, toDirection);
-            var s = Math.Sqrt((1 + dot) * 2);
+            var s = GMath.Sqrt((1 + dot) * 2);
             var invS = 1 / s;
 
             x = cross.x * invS;
             y = cross.y * invS;
             z = cross.z * invS;
-            w = s * Math.Dot5;
+            w = s * GMath.Dot5;
         }
 
         public static Quaternion RotateTowards(Quaternion from, Quaternion to, Single maxDegreesDelta) {
@@ -335,11 +335,11 @@ namespace SeaWar.Mathematics {
             if (angle == 0)
                 return to;
 
-            return SlerpUnclamped(from, to, Math.Min(1, maxDegreesDelta / angle));
+            return SlerpUnclamped(from, to, GMath.Min(1, maxDegreesDelta / angle));
         }
 
         public static Quaternion Normalize(Quaternion q) {
-            var mag = Math.Sqrt(Dot(q, q));
+            var mag = GMath.Sqrt(Dot(q, q));
             if (mag < Single.Epsilon)
                 return Identity;
 

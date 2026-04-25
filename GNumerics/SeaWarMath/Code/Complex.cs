@@ -44,7 +44,7 @@ namespace SeaWar.Mathematics {
             var lenSq = r * r + i * i;
             if (lenSq <= 0) return default;
 
-            var inv = 1 / Math.Sqrt(lenSq);
+            var inv = 1 / GMath.Sqrt(lenSq);
             return new(r * inv, i * inv);
         }
 
@@ -56,14 +56,14 @@ namespace SeaWar.Mathematics {
         }
 
         /// Is this rotation normalized?
-        public readonly bool IsNormalized() => Math.Abs(i * i + r * r - 1) < (Single)0.0006f;
+        public readonly bool IsNormalized() => GMath.Abs(i * i + r * r - 1) < (Single)0.0006f;
 
         /// Get the angle radians the range [-pi, pi]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly Single GetAngle() => Math.Atan2(i, r);
+        public readonly Single GetAngle() => GMath.Atan2(i, r);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex FromAngle(Single angle) => angle == 0 ? Identity : new(Math.Cos(angle), Math.Sin(angle));
+        public static Complex FromAngle(Single angle) => angle == 0 ? Identity : new(GMath.Cos(angle), GMath.Sin(angle));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Complex Conjugate(Complex c) => new(c.r, -c.i);
@@ -105,7 +105,7 @@ namespace SeaWar.Mathematics {
             var lenSq = forward.x * forward.x + forward.y * forward.y;
             if (lenSq <= 0) return Identity;
 
-            var inv = 1 / Math.Sqrt(lenSq);
+            var inv = 1 / GMath.Sqrt(lenSq);
             return new Complex(forward.x * inv, forward.y * inv);
         }
 
@@ -121,7 +121,7 @@ namespace SeaWar.Mathematics {
 
         /// 性能很低,谨慎调用
         public static Complex LerpAngle(Single a, Single b, Single t) {
-            var delta = Math.Atan2(Math.Sin(b - a), Math.Cos(b - a));
+            var delta = GMath.Atan2(GMath.Sin(b - a), GMath.Cos(b - a));
             var angle = a + delta * t;
             return FromAngle(angle);
         }
@@ -141,7 +141,7 @@ namespace SeaWar.Mathematics {
 
             // 叠加旋转
             // 性能优化：如果角度极小，使用快速构造
-            var delta = (Math.Abs(angle) < (Single)0.174f) ? FromSmallAngle(angle) : FromAngle(angle);
+            var delta = (GMath.Abs(angle) < (Single)0.174f) ? FromSmallAngle(angle) : FromAngle(angle);
             return Mul(a, delta);
         }
 
