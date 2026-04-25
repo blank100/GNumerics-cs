@@ -35,13 +35,71 @@ namespace SeaWar.Mathematics.Tests.glm {
             AssertVector2Equal(new Vector2(1, 0), Vector2.Right);
         }
 
-        [Theory]
-        [InlineData(0, 5, 10)]
-        [InlineData(1, -3, 7)]
-        public void Indexer_Get_ReturnsCorrectValues(int index, int x, int y) {
-            var v = new Vector2(x, y);
-            Assert.Equal((Single)x, v[index]);
+        #region 构造函数和索引器测试
+
+        [Fact]
+        public void Constructor_应正确初始化分量() {
+            var v = new Vector2(3, 4);
+            Assert.Equal((Single)3, v.x);
+            Assert.Equal((Single)4, v.y);
         }
+
+        [Theory]
+        [InlineData(5, 10)]
+        [InlineData(-3, 7)]
+        [InlineData(0, 0)]
+        [InlineData(100, -100)]
+        public void Indexer_Get_Index0_应返回X分量(int x, int y) {
+            var v = new Vector2(x, y);
+            Assert.Equal((Single)x, v[0]);
+        }
+
+        [Theory]
+        [InlineData(5, 10)]
+        [InlineData(-3, 7)]
+        [InlineData(0, 0)]
+        [InlineData(100, -100)]
+        public void Indexer_Get_Index1_应返回Y分量(int x, int y) {
+            var v = new Vector2(x, y);
+            Assert.Equal((Single)y, v[1]);
+        }
+
+        [Theory]
+        [InlineData(0, 10)]
+        [InlineData(1, 20)]
+        public void Indexer_Set_应正确设置分量(int index, int value) {
+            var v = new Vector2(0, 0);
+            v[index] = (Single)value;
+            Assert.Equal((Single)value, v[index]);
+
+            // 验证另一个分量未被改变
+            if (index == 0)
+                Assert.Equal((Single)0, v[1]);
+            else
+                Assert.Equal((Single)0, v[0]);
+        }
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(2)]
+        [InlineData(100)]
+        [InlineData(int.MinValue)]
+        [InlineData(int.MaxValue)]
+        public void Indexer_Get_无效索引_应抛出异常(int index) {
+            var v = new Vector2(1, 2);
+            Assert.Throws<IndexOutOfRangeException>(() => v[index]);
+        }
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(2)]
+        [InlineData(100)]
+        public void Indexer_Set_无效索引_应抛出异常(int index) {
+            var v = new Vector2(1, 2);
+            Assert.Throws<IndexOutOfRangeException>(() => v[index] = 0);
+        }
+
+        #endregion
 
         [Fact]
         public void Indexer_Get_ThrowsWhenOutOfRange() {
@@ -156,7 +214,7 @@ namespace SeaWar.Mathematics.Tests.glm {
         [Fact]
         public void Magnitude_And_SqrMagnitude_Correct() {
             var v = new Vector2(3, 4);
-            AssertSingleEqual(25, v.SqrMagnitude,5);
+            AssertSingleEqual(25, v.SqrMagnitude, 5);
             AssertSingleEqual(5, v.Magnitude, 5); // 定点数开根号允许微小误差
         }
 
@@ -198,7 +256,7 @@ namespace SeaWar.Mathematics.Tests.glm {
         public void Dot_WorksCorrectly(int ax, int ay, int bx, int by, int expected) {
             var a = new Vector2(ax, ay);
             var b = new Vector2(bx, by);
-            AssertSingleEqual(expected, Vector2.Dot(a, b),5);
+            AssertSingleEqual(expected, Vector2.Dot(a, b), 5);
         }
 
         [Theory]
@@ -208,7 +266,7 @@ namespace SeaWar.Mathematics.Tests.glm {
         public void Cross_WorksCorrectly(int ax, int ay, int bx, int by, int expected) {
             var a = new Vector2(ax, ay);
             var b = new Vector2(bx, by);
-            AssertSingleEqual(expected, Vector2.Cross(a, b),5);
+            AssertSingleEqual(expected, Vector2.Cross(a, b), 5);
         }
 
         #endregion

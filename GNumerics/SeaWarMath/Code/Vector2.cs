@@ -143,10 +143,27 @@ namespace SeaWar.Mathematics {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single SignedAngle(Vector2 from, Vector2 to) => Angle(from, to) * GMath.Sign(from.x * to.y - from.y * to.x);
+        public static Single SignedAngle(Vector2 from, Vector2 to) {
+            var unsignedAngle = Angle(from, to);
+            var sign = GMath.Sign(from.x * to.y - from.y * to.x);
+
+            // 处理共线情况（叉积为0）
+            // 如果点积为负，说明是反向的，返回 180
+            // 如果点积为正，说明是同向的，返回 0
+            if (sign == 0) return Dot(from, to) < 0 ? 180 : 0;
+
+            return unsignedAngle * sign;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single FastSignedAngle(Vector2 from, Vector2 to) => FastAngle(from, to) * GMath.Sign(from.x * to.y - from.y * to.x);
+        public static Single FastSignedAngle(Vector2 from, Vector2 to) {
+            var unsignedAngle = FastAngle(from, to);
+            var sign = GMath.Sign(from.x * to.y - from.y * to.x);
+
+            if (sign == 0) return Dot(from, to) < 0 ? 180 : 0;
+
+            return unsignedAngle * sign;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Distance(Vector2 a, Vector2 b) {

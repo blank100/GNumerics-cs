@@ -124,8 +124,7 @@ namespace SeaWar.Mathematics {
 
             var rotated = newDir * newMag;
 
-            // --- 6. 最关键：再用 Vector MoveTowards 兜底（统一语义）
-            return MoveTowards(current, rotated, maxMagnitudeDelta);
+            return rotated;
         }
 
 #if USE_FIXED64
@@ -238,7 +237,9 @@ namespace SeaWar.Mathematics {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Angle(Vector3 from, Vector3 to) {
-            var num = GMath.Sqrt(from.SqrMagnitude * to.SqrMagnitude);
+            var denom = from.SqrMagnitude * to.SqrMagnitude;
+            if (denom < GMath.NormalizeEpsilon) return 0;
+            var num = GMath.Sqrt(denom);
             return num < GMath.LooseTolerance ? 0 : GMath.Acos(GMath.Clamp(Dot(from, to) / num, -1, 1)) * GMath.Rad2Deg;
         }
 
@@ -253,21 +254,17 @@ namespace SeaWar.Mathematics {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single SignedAngle(Vector3 from, Vector3 to, Vector3 axis) {
             var angle = Angle(from, to);
-            var n1 = from.y * to.z - from.z * to.y;
-            var n2 = from.z * to.x - from.x * to.z;
-            var n3 = from.x * to.y - from.y * to.x;
-            Single num5 = GMath.Sign(axis.x * n1 + axis.y * n2 + axis.z * n3);
-            return angle * num5;
+            var cross = Cross(from, to);
+            var sign = GMath.Sign(Dot(axis, cross));
+            return angle * sign;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single FastSignedAngle(Vector3 from, Vector3 to, Vector3 axis) {
             var angle = FastAngle(from, to);
-            var n1 = from.y * to.z - from.z * to.y;
-            var n2 = from.z * to.x - from.x * to.z;
-            var n3 = from.x * to.y - from.y * to.x;
-            Single num5 = GMath.Sign(axis.x * n1 + axis.y * n2 + axis.z * n3);
-            return angle * num5;
+            var cross = Cross(from, to);
+            var sign = GMath.Sign(Dot(axis, cross));
+            return angle * sign;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -304,9 +301,9 @@ namespace SeaWar.Mathematics {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 ClampMagnitude(Vector3 vector, Single maxLength) {
             var lengthSq = vector.SqrMagnitude;
-            if (lengthSq <= maxLength * maxLength) return vector;
-            var length = GMath.Sqrt(lengthSq);
-            return new(vector.x / length * maxLength, vector.y / length * maxLength, vector.z / length * maxLength);
+            var maxLenSq = maxLength * maxLength;
+            var scale = GMath.Min(GMath.One, maxLenSq / (lengthSq + GMath.Epsilon));
+            return vector * GMath.Sqrt(scale);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -314,7 +311,8 @@ namespace SeaWar.Mathematics {
             var lengthSq = vector.SqrMagnitude;
             if (lengthSq <= maxLength * maxLength) return vector;
             var invLen = GMath.InvSqrt(lengthSq);
-            return new(vector.x * invLen * maxLength, vector.y * invLen * maxLength, vector.z * invLen * maxLength);
+            var scale = invLen * maxLength;
+            return new(vector.x * scale, vector.y * scale, vector.z * scale);
         }
 
         public override string ToString() => ToString(null, null);
