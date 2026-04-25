@@ -121,7 +121,21 @@ namespace Gal.Core {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static long FastMul(long a, long b, int fractionBits, ulong fractionalPartMask) {
+        public static long Mul(long a, long b, int fractionBits, ulong fractionalPartMask) {
+#if NET7_0_OR_GREATER
+            var high = Math.BigMul(a, b, out var low);
+            // 逻辑：高位部分往左抬，低位部分往右挪，然后合并
+            return (high << (64 - fractionBits)) | low >>> fractionBits;
+
+            // .NET 7+ 使用 Int128
+            // return (long)(((System.Int128)a * b) >> fractionBits);
+#elif NET5_0_OR_GREATER
+            // .NET 5/6 使用 Math.BigMul
+            var high = Math.BigMul(a, b, out var low);
+            // 逻辑：高位部分往左抬，低位部分往右挪，然后合并
+            return (high << (64 - fractionBits)) | low >>> fractionBits;
+#else
+            // Unity / .NET Standard / .NET Framework 使用手动实现
             var aLo = (ulong)a & fractionalPartMask;
             var aHi = a >> fractionBits;
             var bLo = (ulong)b & fractionalPartMask;
@@ -133,12 +147,16 @@ namespace Gal.Core {
             if (p4 != 0) {
                 var limit = long.MaxValue >> fractionBits;
                 var absP4 = Abs(p4);
-                if (absP4 > limit) throw new OverflowException("FastMul overflow: high*high term");
+                if (absP4 > limit) {
+                    throw new OverflowException("FastMul overflow: high*high term");
+                }
             }
 
             return checked((long)(aLo * bLo >> fractionBits) + (long)aLo * bHi + aHi * (long)bLo + (p4 << fractionBits));
 #else
-            return (long)(aLo * bLo >> fractionBits)+ (long)aLo * bHi+ aHi * (long)bLo+ (p4 << fractionBits);
+            return (long)(aLo * bLo >> fractionBits) + (long)aLo * bHi + aHi * (long)bLo + (p4 << fractionBits);
+#endif
+
 #endif
         }
 
@@ -184,8 +202,8 @@ namespace Gal.Core {
         public static long Pow(long v, int exponent, long one, int fractionBits, ulong fractionalPartMask) {
             long result = one, baseCopy = v;
             while (exponent > 0) {
-                if ((exponent & 1) == 1) result = FastMul(result, baseCopy, fractionBits, fractionalPartMask);
-                baseCopy = FastMul(baseCopy, baseCopy, fractionBits, fractionalPartMask);
+                if ((exponent & 1) == 1) result = Mul(result, baseCopy, fractionBits, fractionalPartMask);
+                baseCopy = Mul(baseCopy, baseCopy, fractionBits, fractionalPartMask);
                 exponent >>= 1;
             }
 
@@ -277,13 +295,13 @@ namespace Gal.Core {
             // ------------------------------------------------------------
             var threeHalfs = 3L << (fractionBits - 1);
 
-            var y2 = FastMul(y, y, fractionBits, fractionalPartMask);
-            var xy2 = FastMul(x, y2, fractionBits, fractionalPartMask);
-            y = FastMul(y, threeHalfs - (xy2 >> 1), fractionBits, fractionalPartMask);
+            var y2 = Mul(y, y, fractionBits, fractionalPartMask);
+            var xy2 = Mul(x, y2, fractionBits, fractionalPartMask);
+            y = Mul(y, threeHalfs - (xy2 >> 1), fractionBits, fractionalPartMask);
 
-            y2 = FastMul(y, y, fractionBits, fractionalPartMask);
-            xy2 = FastMul(x, y2, fractionBits, fractionalPartMask);
-            y = FastMul(y, threeHalfs - (xy2 >> 1), fractionBits, fractionalPartMask);
+            y2 = Mul(y, y, fractionBits, fractionalPartMask);
+            xy2 = Mul(x, y2, fractionBits, fractionalPartMask);
+            y = Mul(y, threeHalfs - (xy2 >> 1), fractionBits, fractionalPartMask);
 
             return y;
         }
@@ -318,21 +336,21 @@ namespace Gal.Core {
             // k = round(x / ln2) = floor(x / ln2 + 0.5)
             // 在定点数中，这通过乘法实现: k_raw = (x_raw * invLn2_raw) >> fractionBits
             // 加 halfOne 是为了实现 round
-            var k = (FastMul(x, invLn2, fractionBits, fractionalPartMask) + halfOne) >> fractionBits;
+            var k = (Mul(x, invLn2, fractionBits, fractionalPartMask) + halfOne) >> fractionBits;
 
             // r = x - k * ln(2)
             var r = x - (k * ln2);
 
             // --- 3. Padé [3/3] 近似计算 e^r ---
             // 我们计算 r^2
-            var r2 = FastMul(r, r, fractionBits, fractionalPartMask);
+            var r2 = Mul(r, r, fractionBits, fractionalPartMask);
 
             // U = r * ( (1/120 * r^2) + 1/2 )
-            var u_inner = FastMul(r2, padeC3, fractionBits, fractionalPartMask) + halfOne;
-            var u = FastMul(r, u_inner, fractionBits, fractionalPartMask);
+            var u_inner = Mul(r2, padeC3, fractionBits, fractionalPartMask) + halfOne;
+            var u = Mul(r, u_inner, fractionBits, fractionalPartMask);
 
             // V = (1/10 * r^2) + 1
-            var v = FastMul(r2, padeC2, fractionBits, fractionalPartMask) + one;
+            var v = Mul(r2, padeC2, fractionBits, fractionalPartMask) + one;
 
             // e^r = (V + U) / (V - U)
             // 注意：由于 r 范围极小 (abs < 0.347)，V-U 永远大于 0
@@ -370,7 +388,7 @@ namespace Gal.Core {
             var bit = 1L << fractionBits - 1;
 
             for (var i = 0; i < fractionBits; i++) {
-                z = FastMul(z, z, fractionBits, fractionalPartMask);
+                z = Mul(z, z, fractionBits, fractionalPartMask);
 
                 if (z >= one << 1) {
                     z >>= 1;
@@ -400,7 +418,7 @@ namespace Gal.Core {
             var term = one;
             var i = 1;
             while (term != 0) {
-                term = Div(FastMul(FastMul(v, term, fractionBits, fractionalPartMask), ln2, fractionBits, fractionalPartMask), i, fractionBits);
+                term = Div(Mul(Mul(v, term, fractionBits, fractionalPartMask), ln2, fractionBits, fractionalPartMask), i, fractionBits);
                 result += term;
                 i++;
             }
@@ -420,7 +438,7 @@ namespace Gal.Core {
             }
 
             var log2 = Log2(b, one, fractionBits, fractionalPartMask);
-            return Pow2(FastMul(exp, log2, fractionBits, fractionalPartMask), one, fractionBits, integerPartMask, fractionalPartMask, log2Min, log2Max, ln2);
+            return Pow2(Mul(exp, log2, fractionBits, fractionalPartMask), one, fractionBits, integerPartMask, fractionalPartMask, log2Min, log2Max, ln2);
         }
 
         /// <summary>
@@ -460,15 +478,15 @@ namespace Gal.Core {
             if (x > piOver2) x = pi - x;
 
             // Precompute x^2
-            var x2 = FastMul(x, x, fractionBits, fractionalPartMask);
-            var x4 = FastMul(x2, x2, fractionBits, fractionalPartMask);
+            var x2 = Mul(x, x, fractionBits, fractionalPartMask);
+            var x4 = Mul(x2, x2, fractionBits, fractionalPartMask);
 
             // Optimized Chebyshev Polynomial for Sin(x)
-            var result = FastMul(x,
+            var result = Mul(x,
                 one -
-                FastMul(x2, sSinCoeff3, fractionBits, fractionalPartMask) +
-                FastMul(x4, sSinCoeff5, fractionBits, fractionalPartMask) -
-                FastMul(FastMul(x4, x2, fractionBits, fractionalPartMask), sSinCoeff7, fractionBits, fractionalPartMask),
+                Mul(x2, sSinCoeff3, fractionBits, fractionalPartMask) +
+                Mul(x4, sSinCoeff5, fractionBits, fractionalPartMask) -
+                Mul(Mul(x4, x2, fractionBits, fractionalPartMask), sSinCoeff7, fractionBits, fractionalPartMask),
                 fractionBits,
                 fractionalPartMask
             );
@@ -511,7 +529,7 @@ namespace Gal.Core {
             else if (x > piOver2) x -= pi;
 
             // Use continued fraction to approximate tan(x)
-            var x2 = FastMul(x, x, fractionBits, fractionalPartMask);
+            var x2 = Mul(x, x, fractionBits, fractionalPartMask);
             var numerator = x;
             var denominator = one;
 
@@ -542,8 +560,8 @@ namespace Gal.Core {
             // For values close to 0, use a Padé approximation for better precision
             if (Abs(x) < halfOne) {
                 // Padé approximation of asin(x) for |x| < 0.5
-                var xSquared = FastMul(x, x, fractionBits, fractionalPartMask);
-                var numerator = FastMul(x, one + FastMul(xSquared, sPadeA1 + FastMul(xSquared, sPadeA2, fractionBits, fractionalPartMask), fractionBits, fractionalPartMask), fractionBits,
+                var xSquared = Mul(x, x, fractionBits, fractionalPartMask);
+                var numerator = Mul(x, one + Mul(xSquared, sPadeA1 + Mul(xSquared, sPadeA2, fractionBits, fractionalPartMask), fractionBits, fractionalPartMask), fractionBits,
                     fractionalPartMask);
                 // var numerator = x * (one + xSquared * (s_PadeA1 + xSquared * s_PadeA2));
                 return numerator;
@@ -564,7 +582,7 @@ namespace Gal.Core {
             if (x == 0) return piOver2; // acos(0) = π/2
 
             // Compute using the relationship acos(x) = atan(sqrt(1 - x^2) / x) + π/2 when x is negative
-            var sqrtTerm = Sqrt(one - FastMul(x, x, fractionBits, fractionalPartMask), fractionBits); // sqrt(1 - x^2)
+            var sqrtTerm = Sqrt(one - Mul(x, x, fractionBits, fractionalPartMask), fractionBits); // sqrt(1 - x^2)
             var atanTerm = Atan(Div(sqrtTerm, x, fractionBits), fractionBits, fractionalPartMask, one, piOver2);
 
             return x < 0
@@ -589,15 +607,15 @@ namespace Gal.Core {
             var result = one;
             var term = one;
 
-            var zSq = FastMul(z, z, fractionBits, fractionalPartMask);
-            var zSq2 = FastMul(zSq, two, fractionBits, fractionalPartMask);
+            var zSq = Mul(z, z, fractionBits, fractionalPartMask);
+            var zSq2 = Mul(zSq, two, fractionBits, fractionalPartMask);
             var zSqPlusOne = zSq + one;
-            var zSq12 = FastMul(zSqPlusOne, two, fractionBits, fractionalPartMask);
+            var zSq12 = Mul(zSqPlusOne, two, fractionBits, fractionalPartMask);
             var dividend = zSq2;
-            var divisor = FastMul(zSqPlusOne, three, fractionBits, fractionalPartMask);
+            var divisor = Mul(zSqPlusOne, three, fractionBits, fractionalPartMask);
 
             for (var i = 2; i < 30; ++i) {
-                term = FastMul(term, Div(dividend, divisor, fractionBits), fractionBits, fractionalPartMask);
+                term = Mul(term, Div(dividend, divisor, fractionBits), fractionBits, fractionalPartMask);
                 result += term;
 
                 dividend += zSq2;
@@ -606,7 +624,7 @@ namespace Gal.Core {
                 if (term == 0) break;
             }
 
-            result = Div(FastMul(result, z, fractionBits, fractionalPartMask), zSqPlusOne, fractionBits);
+            result = Div(Mul(result, z, fractionBits, fractionalPartMask), zSqPlusOne, fractionBits);
 
             if (invert) result = piOver2 - result;
 
@@ -630,14 +648,14 @@ namespace Gal.Core {
                 adjustedResult = piOver4 - Atan(transformedZ, fractionBits, fractionalPartMask, one, halfOne, precision, piOver4);
             } else {
                 // Use extended Taylor series directly for better precision on small z.
-                var zSq = FastMul(z, z, fractionBits, fractionalPartMask);
+                var zSq = Mul(z, z, fractionBits, fractionalPartMask);
 
                 var result = z;
                 var term = z;
                 var sign = -1;
 
                 for (var i = 3; i < 15; i += 2) {
-                    term = FastMul(term, zSq, fractionBits, fractionalPartMask);
+                    term = Mul(term, zSq, fractionBits, fractionalPartMask);
                     var nextTerm = term / i;
                     if (Abs(nextTerm) < precision) break;
 

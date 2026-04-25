@@ -226,20 +226,21 @@ namespace Gal.Core {
         public static NumericType operator --(NumericType a) => new(a._raw - OneRawValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static NumericType operator *(NumericType a, NumericType b) => new(Fixed64Utils.FastMul(a._raw, b._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
+        public static NumericType operator *(NumericType a, NumericType b) => new(Fixed64Utils.Mul(a._raw, b._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
+
+        /// 有越界风险,当值很小时可以使用
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static NumericType FastMul(NumericType a, NumericType b) => new(a._raw * b._raw >> FRACTION_BITS);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static NumericType FastMul(NumericType a, NumericType b) => a * b;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static NumericType operator *(NumericType a, int b) => new(Fixed64Utils.FastMul(a._raw, (long)b << FRACTION_BITS, FRACTION_BITS, FRACTIONAL_PART_MASK));
+        public static NumericType operator *(NumericType a, int b) => new(Fixed64Utils.Mul(a._raw, (long)b << FRACTION_BITS, FRACTION_BITS, FRACTIONAL_PART_MASK));
 
         /// 有越界风险,当值很小时可以使用
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumericType FastMul(NumericType a, int b) => new(a._raw * b);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static NumericType operator *(int a, NumericType b) => new(Fixed64Utils.FastMul((long)a << FRACTION_BITS, b._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
+        public static NumericType operator *(int a, NumericType b) => new(Fixed64Utils.Mul((long)a << FRACTION_BITS, b._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
 
         /// 有越界风险,当值很小时可以使用
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -370,8 +371,7 @@ namespace Gal.Core {
         public static NumericType Clamp01(NumericType value) => Max(Zero, Min(One, value));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static NumericType Min(NumericType a, NumericType b)
-        {
+        public static NumericType Min(NumericType a, NumericType b) {
             var x = a._raw;
             var y = b._raw;
             var mask = (x - y) >> 63;
@@ -379,8 +379,7 @@ namespace Gal.Core {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static NumericType Max(NumericType a, NumericType b)
-        {
+        public static NumericType Max(NumericType a, NumericType b) {
             var x = a._raw;
             var y = b._raw;
             var mask = (x - y) >> 63;
@@ -405,7 +404,7 @@ namespace Gal.Core {
 
             var raw = x._raw;
             var inv = Fixed64Utils.InvSqrtFast(raw, FRACTION_BITS, FRACTIONAL_PART_MASK, _invSqrtFastArg1, _invSqrtFastArg2, _invSqrtFastArg3);
-            return new(Fixed64Utils.FastMul(raw, inv, FRACTION_BITS, FRACTIONAL_PART_MASK));
+            return new(Fixed64Utils.Mul(raw, inv, FRACTION_BITS, FRACTIONAL_PART_MASK));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -446,19 +445,19 @@ namespace Gal.Core {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumericType Log(NumericType x)
             // 使用换底公式: ln(x) = log2(x) * ln(2)
-            => new(Fixed64Utils.FastMul(Log2(x)._raw, LN2._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
+            => new(Fixed64Utils.Mul(Log2(x)._raw, LN2._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumericType Log2(NumericType x) => new(Fixed64Utils.Log2(x._raw, OneRawValue, FRACTION_BITS, FRACTIONAL_PART_MASK));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumericType Ln(NumericType x) =>
-            new(Fixed64Utils.FastMul(Log2(x)._raw, LN2._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
+            new(Fixed64Utils.Mul(Log2(x)._raw, LN2._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumericType Log10(NumericType x)
             // 使用换底公式: log10(x) = log2(x) * (1 / log2(10))
-            => new(Fixed64Utils.FastMul(Log2(x)._raw, InvLog2_10._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
+            => new(Fixed64Utils.Mul(Log2(x)._raw, InvLog2_10._raw, FRACTION_BITS, FRACTIONAL_PART_MASK));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumericType Sin(NumericType x) =>

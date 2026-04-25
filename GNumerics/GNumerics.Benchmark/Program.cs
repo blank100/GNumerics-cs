@@ -1,7 +1,7 @@
+
+using Gal.Benchmarks;
 #if !DEBUG
 using BenchmarkDotNet.Running;
-
-using General.Benchmark;
 
 #endif
 
@@ -11,7 +11,8 @@ namespace FixedNumeric.Benchmark {
 #if DEBUG
 			DebugRunner.Run();
 #else
-			BenchmarkRunner.Run<Fixed64Benchmark>();
+            var summary1 = BenchmarkRunner.Run<Fixed64Benchmarks>();
+            var summary2 = BenchmarkRunner.Run<Fixed64VsDoubleBenchmarks>();
 #endif
 		}
 	}
